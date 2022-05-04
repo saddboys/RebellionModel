@@ -33,13 +33,23 @@ public class Model {
     private Turtle[][] turtleMap;
     private Government govt;
 
+    //value range for perceived hardship of agents
+    private double minPerceivedHardship = 0;
+    private double maxPerceivedHardship = 1;
+
+    // x and y axis
+    private int x = 50;
+    private int y = 50;
+
     public Model(int width, int height){
         turtles = new ArrayList<>();
         agents = new ArrayList<>();
         cops = new ArrayList<>();
 
+        x = width;
+        y = height;
+
         turtleMap = new Turtle[width][height];
-        govt = new Government();
     }
 
     /**
@@ -47,6 +57,7 @@ public class Model {
      */
     public void setup(){
 
+        govt = new Government(legitimacy);
     }
 
     /**
