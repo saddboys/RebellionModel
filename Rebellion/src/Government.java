@@ -1,3 +1,6 @@
+/**
+ * Representing the government which the cops and agents belong to
+ */
 public class Government {
 
     private double legitimacy;

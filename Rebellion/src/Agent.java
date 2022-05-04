@@ -1,6 +1,11 @@
+/**
+ * Represents a single agent on the model board
+ */
 public class Agent extends Turtle{
-
+    // what the agent is currently doing
     private AgentState state = AgentState.PASSIVE;
+
+    // How the agent views the world contributing to their revolt risk.
     private double perceivedHardship;
 
     // grievance = perceived-hardship * (1 - government-legitimacy)
@@ -24,20 +29,33 @@ public class Agent extends Turtle{
 
     }
 
+    /**
+     * Determines whether or not the agent should revolt at this turn. If so, then the agent will be changed to
+     * revolting state. This is calculated based on net risk
+     */
     public void revoltOrNot(){
-
+        // TODO
     }
 
+    /**
+     * Arrests the agent for a specified term
+     * @param term the term that the agent is arrested for
+     */
     public void arrest(int term){
         this.jailTerm = term;
         this.state = AgentState.IMPRISONED;
     }
 
+    /**
+     * The agent spends time in jail, and is released if their term is up
+     */
     public void spendTimeInJail(){
-        if (jailTerm == 0){
-            this.state = AgentState.PASSIVE;
-        } else {
-            this.jailTerm--;
+        if (this.state == AgentState.IMPRISONED) {
+            if (jailTerm == 0) {
+                this.state = AgentState.PASSIVE;
+            } else {
+                this.jailTerm--;
+            }
         }
     }
 }

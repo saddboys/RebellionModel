@@ -1,6 +1,9 @@
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Sets up the model and allows for execution of the model
+ */
 public class Model {
 
     // The density of Agents in comparison to empty space
@@ -56,8 +59,8 @@ public class Model {
      * Initialises the model based on provided values
      */
     public void setup(){
-
         govt = new Government(legitimacy);
+        // TODO
     }
 
     /**
@@ -72,9 +75,12 @@ public class Model {
             t.move();
         }
 
-        // do revolts for all agents
+        // do revolts for all agents and jail times
         for (Agent a : agents){
+            // causes agents to revolt if parameters allow
             a.revoltOrNot();
+            // imprisoned agents are freed, or spend time in jail only if they are imprisoned
+            a.spendTimeInJail();
         }
 
         // do arrests for all police

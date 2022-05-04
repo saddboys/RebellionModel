@@ -1,3 +1,6 @@
+/**
+ * Representation of a single actor (cop or agent) on the model board
+ */
 public abstract class Turtle {
 
     private int location_x;
@@ -10,7 +13,10 @@ public abstract class Turtle {
         this.location_y = y;
     }
 
+    /**
+     * Moves the actor to an empty space in vision range
+     */
     public void move(){
-
+        // TODO
     }
 }
