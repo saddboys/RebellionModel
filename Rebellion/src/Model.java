@@ -71,22 +71,9 @@ public class Model {
      */
     private void passTurn(){
         // do movements for all turtles
-        for (Turtle t : turtles) {
-            t.move();
-        }
+        Turtle[][] nextState =  new Turtle[this.x][this.y];
 
-        // do revolts for all agents and jail times
-        for (Agent a : agents){
-            // causes agents to revolt if parameters allow
-            a.revoltOrNot();
-            // imprisoned agents are freed, or spend time in jail only if they are imprisoned
-            a.spendTimeInJail();
-        }
-
-        // do arrests for all police
-        for (Police p : cops){
-            p.arrest();
-        }
+        // TODO
     }
 
     public void setInitialDensityAgent(double initialDensityAgent) {
