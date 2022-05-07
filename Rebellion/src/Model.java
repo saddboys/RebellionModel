@@ -1,5 +1,4 @@
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Sets up the model and allows for execution of the model
@@ -40,27 +39,67 @@ public class Model {
     private double minPerceivedHardship = 0;
     private double maxPerceivedHardship = 1;
 
-    // x and y axis
-    private int x = 50;
-    private int y = 50;
+    // width and height axis
+    private int width = 50;
+    private int height = 50;
 
     public Model(int width, int height){
         turtles = new ArrayList<>();
         agents = new ArrayList<>();
         cops = new ArrayList<>();
 
-        x = width;
-        y = height;
+        this.width = width;
+        this.height = height;
 
         turtleMap = new Turtle[width][height];
     }
 
     /**
+     * DAVID
      * Initialises the model based on provided values
      */
     public void setup(){
         govt = new Government(legitimacy);
-        // TODO
+
+        if (initialDensityAgent + initialDensityCops > 1.0) {
+            throw new IllegalArgumentException();
+        }
+
+        // Generate width height array for random selection(
+        List<int[]> placements = new ArrayList<>();
+        for (int x = 0; x < this.width; x++){
+            for (int y = 0; y < this.height; y++){
+                placements.add(new int[]{x, y});
+            }
+        }
+        Collections.shuffle(placements);
+
+        // calculate number of turtles
+        int locations = width * height;
+        int numAgent = (int) Math.floor(locations * initialDensityAgent);
+        int numCops = (int) Math.floor(locations * initialDensityCops);
+
+        Random r = new Random();
+
+        // generate and add agents
+        for (int i = 0; i < numAgent; i++){
+            int[] coord = placements.remove(0);
+            double hardship = minPerceivedHardship +
+                    (maxPerceivedHardship - minPerceivedHardship) * r.nextDouble();
+            Agent a = new Agent(vision, coord[0], coord[1], hardship);
+            turtles.add(a);
+            agents.add(a);
+            turtleMap[coord[0]][coord[1]] = a;
+        }
+
+        // generate and add police
+        for (int i = 0; i < numCops; i++){
+            int[] coord = placements.remove(0);
+            Police p = new Police(vision, coord[0], coord[1]);
+            turtles.add(p);
+            cops.add(p);
+            turtleMap[coord[0]][coord[1]] = p;
+        }
     }
 
     /**
@@ -71,7 +110,7 @@ public class Model {
      */
     private void passTurn(){
         // do movements for all turtles
-        Turtle[][] nextState =  new Turtle[this.x][this.y];
+        Turtle[][] nextState =  new Turtle[this.width][this.height];
 
         // TODO
         this.turtleMap = nextState;

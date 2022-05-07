@@ -30,6 +30,7 @@ public class Agent extends Turtle{
     }
 
     /**
+     * DAVID
      * Determines whether or not the agent should revolt at this turn. If so, then the agent will be changed to
      * revolting state. This is calculated based on net risk
      */

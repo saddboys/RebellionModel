@@ -8,8 +8,5 @@ public class Main {
 	    // TODO
         Model m = new Model(30, 30);
         m.setup();
-        while (true){
-
-        }
     }
 }
