@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
-import java.lang.Math;
+import java.util.Random;
 
 /**
  * Representation of a single actor (cop or agent) on the model board
@@ -21,25 +21,28 @@ public abstract class Turtle {
      * Moves the actor to an empty space in vision range
      */
     public void move(Turtle[][] map){
-        List<int[]> empty_patch = getEmptyPatch(map);
 
-        int rand = (int)(Math.random() * (empty_patch.size() - 1));
-        int[] new_coordinate = empty_patch.get(rand);
+        List<int[]> empty_patch = getEmptyPatch();
 
-        map[this.location_x][this.location_y] = null;
-        this.location_x = new_coordinate[0];
-        this.location_y = new_coordinate[1];
-        map[this.location_x][this.location_y] = this;
-
+        if(empty_patch.size() > 0){
+            Random rand = new Random();
+            int[] new_coordinate = empty_patch.get(rand.nextInt(empty_patch.size()));
+            map[this.location_x][this.location_y] = null;
+            this.location_x = new_coordinate[0];
+            this.location_y = new_coordinate[1];
+            map[this.location_x][this.location_y] = this;
+        }
     }
 
     /**
      *
-     * @param width width of the map
-     * @param height height of the map
      * @return A list of coordinate within the vision
      */
-    public List<int[]> getVision(int width, int height){
+    public List<int[]> getVision(){
+
+        Turtle[][] map = Main.model.getTurtleMap();
+        int width = map[0].length;
+        int height = map.length;
         int x_range_low = this.location_x - vision;
         int x_range_high = this.location_x + vision;
         int y_range_low = this.location_y - vision;
@@ -65,11 +68,11 @@ public abstract class Turtle {
 
     /**
      *
-     * @param turtleMap current map
      * @return a list of coordinate within the vision and is unoccupied
      */
-    public List<int[]> getEmptyPatch(Turtle[][] turtleMap){
-        List<int[]> vision = getVision(turtleMap[0].length, turtleMap.length);
+    public List<int[]> getEmptyPatch(){
+        Turtle[][] turtleMap = Main.model.getTurtleMap();
+        List<int[]> vision = getVision();
         List<int[]> empty_patch = new ArrayList<>();
 
         for(int[] coordinate: vision){
@@ -79,4 +82,5 @@ public abstract class Turtle {
         }
         return empty_patch;
     }
+
 }

@@ -45,6 +45,8 @@ public class Model {
     private int width = 50;
     private int height = 50;
 
+    public int jailCount = 0;
+
     public Model(int width, int height){
         turtles = new ArrayList<>();
         agents = new ArrayList<>();
@@ -112,12 +114,23 @@ public class Model {
      *  Agents Rebel
      *  Police Arrest
      */
-    private void passTurn(){
-        // do movements for all turtles
-        Turtle[][] nextState =  new Turtle[this.width][this.height];
+    public void passTurn(){
 
-        // TODO
-        this.turtleMap = nextState;
+        for (Agent agent: agents){
+            if(agent.getState() == AgentState.PASSIVE){
+                agent.revoltOrNot();
+                agent.move(turtleMap);
+            }else if(agent.getState() == AgentState.IMPRISONED){
+                agent.spendTimeInJail();
+            }else {
+                agent.move(turtleMap);
+            }
+        }
+        for (Police police: cops){
+            police.move(turtleMap);
+            police.arrest();
+
+        }
     }
 
     public Turtle[][] getTurtleMap() {
@@ -162,5 +175,48 @@ public class Model {
 
     public Government getGovt() {
         return govt;
+    }
+
+    public int getMaxJailTerm(){
+        return this.maxJailTerm;
+    }
+
+    /**
+     * randomly find a empty patch
+     * @return a coordinate
+     */
+    public int[] getRandomEmptyPatch(){
+        int width = this.turtleMap[0].length;
+        int height = this.turtleMap.length;
+        Random rand = new Random();
+
+        List<int[]> empty_patch = new ArrayList<>();
+        for(int i = 0; i < width; i++){
+            for(int j = 0; j < height; j++){
+                if(this.turtleMap[i][j] == null){
+                    empty_patch.add(new int[] {i, j});
+                }
+            }
+        }
+        return empty_patch.get(rand.nextInt(empty_patch.size()));
+    }
+
+    /**
+     * calculate how many agents is now in the map
+     * @return how many agents is now in the map
+     */
+    public int checkSum(){
+        int width = this.turtleMap[0].length;
+        int height = this.turtleMap.length;
+        int res = 0;
+
+        for(int i = 0; i < width; i++){
+            for(int j = 0; j < height; j++){
+                if(this.turtleMap[i][j] != null){
+                    res += 1;
+                }
+            }
+        }
+        return res;
     }
 }

@@ -82,6 +82,7 @@ public class Agent extends Turtle{
     public void arrest(int term){
         this.jailTerm = term;
         this.state = AgentState.IMPRISONED;
+        this.setLocation(-1, -1);
     }
 
     /**
@@ -91,9 +92,30 @@ public class Agent extends Turtle{
         if (this.state == AgentState.IMPRISONED) {
             if (jailTerm == 0) {
                 this.state = AgentState.PASSIVE;
+                int[] new_location = Main.model.getRandomEmptyPatch();
+                this.setLocation(new_location[0], new_location[1]);
+                Main.model.getTurtleMap()[new_location[0]][new_location[1]] = this;
+                Main.model.jailCount -= 1;
             } else {
                 this.jailTerm--;
             }
         }
+    }
+
+    public AgentState getState(){
+        return this.state;
+    }
+
+    public int getLocationX(){
+        return this.location_x;
+    }
+
+    public int getLocationY(){
+        return this.location_y;
+    }
+
+    public void setLocation(int x, int y){
+        this.location_x = x;
+        this.location_y = y;
     }
 }

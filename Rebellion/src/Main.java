@@ -9,5 +9,9 @@ public class Main {
 	    // TODO
         model = new Model(30, 30);
         model.setup();
+        while (true){
+            model.passTurn();
+            System.out.println("active agent: " + model.checkSum() + "  jail count: " + model.jailCount);
+        }
     }
 }
