@@ -5,14 +5,16 @@ import java.util.*;
  */
 public class Model {
 
+    public static final double K_ARREST = 2.3;
+
     // The density of Agents in comparison to empty space
     private double initialDensityAgent = 0.50;
     // The density of Cops in relation to empty space
     private double initialDensityCops = 0.05;
 
     // The minimum and maximum risk aversion for revolt for agents
-    private double minRiskAversion = 0.05;
-    private double maxRiskAversion = 0.25;
+    private double minRiskAversion = 0.0;
+    private double maxRiskAversion = 1.0;
 
     // The revolt threshold for agents
     private double revoltThreshold = 0.05;
@@ -36,8 +38,8 @@ public class Model {
     private Government govt;
 
     //value range for perceived hardship of agents
-    private double minPerceivedHardship = 0;
-    private double maxPerceivedHardship = 1;
+    private double minPerceivedHardship = 0.0;
+    private double maxPerceivedHardship = 1.0;
 
     // width and height axis
     private int width = 50;
@@ -86,7 +88,9 @@ public class Model {
             int[] coord = placements.remove(0);
             double hardship = minPerceivedHardship +
                     (maxPerceivedHardship - minPerceivedHardship) * r.nextDouble();
-            Agent a = new Agent(vision, coord[0], coord[1], hardship);
+            double riskAversion = minRiskAversion +
+                    (maxRiskAversion - minRiskAversion) * r.nextDouble();
+            Agent a = new Agent(vision, coord[0], coord[1], riskAversion, hardship, revoltThreshold);
             turtles.add(a);
             agents.add(a);
             turtleMap[coord[0]][coord[1]] = a;
@@ -154,5 +158,9 @@ public class Model {
 
     public void setTurtleMap(Turtle[][] turtleMap) {
         this.turtleMap = turtleMap;
+    }
+
+    public Government getGovt() {
+        return govt;
     }
 }
