@@ -7,9 +7,9 @@ import java.lang.Math;
  */
 public abstract class Turtle {
 
-    private int location_x;
-    private int location_y;
-    private int vision;
+    protected int location_x;
+    protected int location_y;
+    protected int vision;
 
     public Turtle(int vision, int x, int y){
         this.vision = vision;

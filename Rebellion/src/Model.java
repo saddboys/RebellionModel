@@ -1,10 +1,11 @@
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Sets up the model and allows for execution of the model
  */
 public class Model {
+
+    public static final double K_ARREST = 2.3;
 
     // The density of Agents in comparison to empty space
     private double initialDensityAgent = 0.50;
@@ -12,8 +13,8 @@ public class Model {
     private double initialDensityCops = 0.05;
 
     // The minimum and maximum risk aversion for revolt for agents
-    private double minRiskAversion = 0.05;
-    private double maxRiskAversion = 0.25;
+    private double minRiskAversion = 0.0;
+    private double maxRiskAversion = 1.0;
 
     // The revolt threshold for agents
     private double revoltThreshold = 0.05;
@@ -37,30 +38,72 @@ public class Model {
     private Government govt;
 
     //value range for perceived hardship of agents
-    private double minPerceivedHardship = 0;
-    private double maxPerceivedHardship = 1;
+    private double minPerceivedHardship = 0.0;
+    private double maxPerceivedHardship = 1.0;
 
-    // x and y axis
-    private int x = 50;
-    private int y = 50;
+    // width and height axis
+    private int width = 50;
+    private int height = 50;
 
     public Model(int width, int height){
         turtles = new ArrayList<>();
         agents = new ArrayList<>();
         cops = new ArrayList<>();
 
-        x = width;
-        y = height;
+        this.width = width;
+        this.height = height;
 
         turtleMap = new Turtle[width][height];
     }
 
     /**
+     * DAVID
      * Initialises the model based on provided values
      */
     public void setup(){
         govt = new Government(legitimacy);
-        // TODO
+
+        if (initialDensityAgent + initialDensityCops > 1.0) {
+            throw new IllegalArgumentException();
+        }
+
+        // Generate width height array for random selection(
+        List<int[]> placements = new ArrayList<>();
+        for (int x = 0; x < this.width; x++){
+            for (int y = 0; y < this.height; y++){
+                placements.add(new int[]{x, y});
+            }
+        }
+        Collections.shuffle(placements);
+
+        // calculate number of turtles
+        int locations = width * height;
+        int numAgent = (int) Math.floor(locations * initialDensityAgent);
+        int numCops = (int) Math.floor(locations * initialDensityCops);
+
+        Random r = new Random();
+
+        // generate and add agents
+        for (int i = 0; i < numAgent; i++){
+            int[] coord = placements.remove(0);
+            double hardship = minPerceivedHardship +
+                    (maxPerceivedHardship - minPerceivedHardship) * r.nextDouble();
+            double riskAversion = minRiskAversion +
+                    (maxRiskAversion - minRiskAversion) * r.nextDouble();
+            Agent a = new Agent(vision, coord[0], coord[1], riskAversion, hardship, revoltThreshold);
+            turtles.add(a);
+            agents.add(a);
+            turtleMap[coord[0]][coord[1]] = a;
+        }
+
+        // generate and add police
+        for (int i = 0; i < numCops; i++){
+            int[] coord = placements.remove(0);
+            Police p = new Police(vision, coord[0], coord[1]);
+            turtles.add(p);
+            cops.add(p);
+            turtleMap[coord[0]][coord[1]] = p;
+        }
     }
 
     /**
@@ -71,10 +114,14 @@ public class Model {
      */
     private void passTurn(){
         // do movements for all turtles
-        Turtle[][] nextState =  new Turtle[this.x][this.y];
+        Turtle[][] nextState =  new Turtle[this.width][this.height];
 
         // TODO
         this.turtleMap = nextState;
+    }
+
+    public Turtle[][] getTurtleMap() {
+        return turtleMap;
     }
 
     public void setInitialDensityAgent(double initialDensityAgent) {
@@ -111,5 +158,9 @@ public class Model {
 
     public void setTurtleMap(Turtle[][] turtleMap) {
         this.turtleMap = turtleMap;
+    }
+
+    public Government getGovt() {
+        return govt;
     }
 }

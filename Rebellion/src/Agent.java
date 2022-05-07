@@ -22,19 +22,57 @@ public class Agent extends Turtle{
 
     private int jailTerm;
 
-    public Agent(int vision, int x, int y,
-                 double perceivedHardship) {
-        super(vision, x, y);
-        this.perceivedHardship = perceivedHardship;
+    private double revoltThreshold;
 
+    public Agent(int vision, int x, int y,
+                 double riskAversion,
+                 double perceivedHardship,
+                 double revoltThreshold) {
+        super(vision, x, y);
+        this.riskAversion = riskAversion;
+        this.perceivedHardship = perceivedHardship;
+        this.revoltThreshold = revoltThreshold;
     }
 
     /**
+     * DAVID
      * Determines whether or not the agent should revolt at this turn. If so, then the agent will be changed to
      * revolting state. This is calculated based on net risk
      */
-    public void revoltOrNot(){
-        // TODO
+    public void revoltOrNot() {
+        Turtle[][] map = Main.model.getTurtleMap();
+        double numCops = 0;
+        double numRebels = 0;
+
+        // calculate min and max range of vision
+        int minX = Math.max(location_x - vision, 0);
+        int maxX = Math.min(location_x + vision, map.length);
+        int minY = Math.max(location_y - vision, 0);
+        int maxY = Math.min(location_y + vision, map[0].length);
+
+        for (int i = minX; i < maxX; i++) {
+            for (int j = minY; j < maxY; j++) {
+                // calculate manhattan distance for vision
+                if ((Math.abs(location_x - i) + Math.abs(location_y - j) <= vision)) {
+                    Turtle currentTurtle = map[i][j];
+                    // find number of police and rebels in vision range
+                    if (currentTurtle instanceof Police) {
+                        numCops++;
+                    } else if (currentTurtle instanceof Agent &&
+                            ((Agent) currentTurtle).state.equals(AgentState.REBELLING)) {
+                        numRebels++;
+                    }
+                }
+            }
+        }
+
+        arrestProbability = 1 - Math.exp(-Model.K_ARREST * (numCops / numRebels));
+        netRisk = riskAversion * arrestProbability;
+        grievance = perceivedHardship * (1 - Main.model.getGovt().getLegitimacy());
+        // rebel if values are over threshold
+        if (grievance - netRisk > revoltThreshold){
+            this.state = AgentState.REBELLING;
+        }
     }
 
     /**

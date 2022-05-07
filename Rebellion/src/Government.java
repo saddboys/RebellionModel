@@ -8,4 +8,8 @@ public class Government {
     public Government(double legitimacy){
         this.legitimacy = legitimacy;
     }
+
+    public double getLegitimacy() {
+        return legitimacy;
+    }
 }
