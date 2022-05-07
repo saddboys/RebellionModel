@@ -116,6 +116,10 @@ public class Model {
         this.turtleMap = nextState;
     }
 
+    public Turtle[][] getTurtleMap() {
+        return turtleMap;
+    }
+
     public void setInitialDensityAgent(double initialDensityAgent) {
         this.initialDensityAgent = initialDensityAgent;
     }
