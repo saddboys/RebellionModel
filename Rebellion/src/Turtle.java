@@ -16,7 +16,7 @@ public abstract class Turtle {
     /**
      * Moves the actor to an empty space in vision range
      */
-    public void move(){
+    public void move(Turtle[][] map){
         // TODO
     }
 }
