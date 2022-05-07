@@ -74,6 +74,7 @@ public class Model {
         Turtle[][] nextState =  new Turtle[this.x][this.y];
 
         // TODO
+        this.turtleMap = nextState;
     }
 
     public void setInitialDensityAgent(double initialDensityAgent) {
