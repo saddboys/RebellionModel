@@ -26,6 +26,8 @@ public class Agent extends Turtle{
 
     private double revoltThreshold;
 
+    private final double GRIEVANCE_CONSTANT = 0.1;
+
     public Agent(int vision, int x, int y,
                  double riskAversion,
                  double perceivedHardship,
@@ -62,7 +64,7 @@ public class Agent extends Turtle{
         netRisk = riskAversion * arrestProbability;
         grievance = perceivedHardship * (1 - Main.model.getGovt().getLegitimacy());
         // rebel if values are over threshold
-        if (grievance - netRisk > revoltThreshold){
+        if (grievance - netRisk + environmentalInfluence() > revoltThreshold){
             this.state = AgentState.REBELLING;
         }
     }
@@ -109,5 +111,22 @@ public class Agent extends Turtle{
     public void setLocation(int x, int y){
         this.location_x = x;
         this.location_y = y;
+    }
+
+    public double environmentalInfluence(){
+        List<int[]> vision = getVision();
+        int rebel = 0;
+        int agent = 0;
+
+        for(int[] coordinate: vision){
+            Turtle turtle = Main.model.getTurtleMap()[coordinate[0]][coordinate[1]];
+            if(turtle instanceof Agent){
+                agent += 1;
+                if (((Agent) turtle).getState() == AgentState.REBELLING){
+                    rebel += 1;
+                }
+            }
+        }
+        return GRIEVANCE_CONSTANT * (rebel * 1.0/agent);
     }
 }
