@@ -25,9 +25,10 @@
       </Pane>
       <Pane layoutX="32.0" layoutY="301.0" prefHeight="120.0" prefWidth="200.0" style="-fx-background-color: #6fb7cc;">
          <children>
-            <Button fx:id="startButton" layoutX="19.0" layoutY="76.0" mnemonicParsing="false" onAction="#run" text="go" />
-            <Button fx:id="endButton" layoutX="67.0" layoutY="76.0" mnemonicParsing="false" onAction="#stop" text="stop" />
+            <Button fx:id="startButton" layoutX="84.0" layoutY="27.0" mnemonicParsing="false" onAction="#run" text="go" />
+            <Button fx:id="endButton" layoutX="14.0" layoutY="76.0" mnemonicParsing="false" onAction="#stop" text="stop" />
             <Button fx:id="setUpButton" layoutX="8.0" layoutY="27.0" mnemonicParsing="false" onAction="#setUp" text="setup" />
+            <Button fx:id="continueButton" layoutX="82.0" layoutY="76.0" mnemonicParsing="false" onAction="#resume" text="continue" />
          </children>
       </Pane>
       <Pane layoutX="528.0" layoutY="49.0" prefHeight="594.0" prefWidth="535.0" style="-fx-background-color: grey;" />

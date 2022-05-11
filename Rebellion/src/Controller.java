@@ -24,6 +24,10 @@ public class Controller {
 
     @FXML
     private Button endButton;
+
+    @FXML
+    private Button continueButton;
+
     double initCopDensity;
 
     Visualization vis;
@@ -44,7 +48,6 @@ public class Controller {
 
             vis = new Visualization();
             vis.start();
-            vis.interrupt();
 
         }catch (Exception e){
             System.out.println(e);
@@ -52,8 +55,11 @@ public class Controller {
     }
 
     public void stop() throws InterruptedException {
-        vis.interrupt();
-        System.out.println("STOP!");
+        vis.pause();
+    }
+
+    public void resume(){
+        vis.getResume();
     }
 
 
