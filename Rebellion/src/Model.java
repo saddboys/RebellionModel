@@ -223,4 +223,9 @@ public class Model {
         }
         return res;
     }
+
+    public void incrementLegitimacy(){
+        this.legitimacy = 0.8 + (1 - 0.8) * (jailCount * 1.0)/agents.size();
+        System.out.println(this.legitimacy);
+    }
 }

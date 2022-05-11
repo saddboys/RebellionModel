@@ -32,6 +32,7 @@ public class Police extends Turtle{
             map[agent.getLocationX()][agent.getLocationY()] = null;
             agent.arrest(Main.model.getMaxJailTerm());
             Main.model.jailCount += 1;
+            Main.model.incrementLegitimacy();
         }
     }
 }
