@@ -47,6 +47,8 @@ public class Model {
 
     public int jailCount = 0;
 
+    public boolean isRebel = false;
+
     public Model(int width, int height){
         turtles = new ArrayList<>();
         agents = new ArrayList<>();
@@ -133,8 +135,8 @@ public class Model {
         for (Police police: cops){
             police.move(turtleMap);
             police.arrest();
-
         }
+        this.isRebel = false;
     }
 
     public Turtle[][] getTurtleMap() {
