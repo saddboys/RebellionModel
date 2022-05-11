@@ -1,3 +1,5 @@
+import java.util.List;
+
 /**
  * Represents a single agent on the model board
  */
@@ -44,25 +46,15 @@ public class Agent extends Turtle{
         double numCops = 0;
         double numRebels = 0;
 
-        // calculate min and max range of vision
-        int minX = Math.max(location_x - vision, 0);
-        int maxX = Math.min(location_x + vision, map.length);
-        int minY = Math.max(location_y - vision, 0);
-        int maxY = Math.min(location_y + vision, map[0].length);
-
-        for (int i = minX; i < maxX; i++) {
-            for (int j = minY; j < maxY; j++) {
-                // calculate manhattan distance for vision
-                if ((Math.abs(location_x - i) + Math.abs(location_y - j) <= vision)) {
-                    Turtle currentTurtle = map[i][j];
-                    // find number of police and rebels in vision range
-                    if (currentTurtle instanceof Police) {
-                        numCops++;
-                    } else if (currentTurtle instanceof Agent &&
-                            ((Agent) currentTurtle).state.equals(AgentState.REBELLING)) {
-                        numRebels++;
-                    }
-                }
+        List<int[]> visionPatches = getVision();
+        for (int[] location : visionPatches){
+            Turtle currentTurtle = map[location[0]][location[1]];
+            // find number of police and rebels in vision range
+            if (currentTurtle instanceof Police) {
+                numCops++;
+            } else if (currentTurtle instanceof Agent &&
+                    ((Agent) currentTurtle).state.equals(AgentState.REBELLING)) {
+                numRebels++;
             }
         }
 

@@ -63,6 +63,10 @@ public class Model {
      * Initialises the model based on provided values
      */
     public void setup(){
+        if (vision > width || vision > height){
+            throw new IllegalArgumentException();
+        }
+
         govt = new Government(legitimacy);
 
         if (initialDensityAgent + initialDensityCops > 1.0) {

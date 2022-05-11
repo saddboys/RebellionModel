@@ -43,27 +43,38 @@ public abstract class Turtle {
         Turtle[][] map = Main.model.getTurtleMap();
         int width = map[0].length;
         int height = map.length;
-        int x_range_low = this.location_x - vision;
-        int x_range_high = this.location_x + vision;
-        int y_range_low = this.location_y - vision;
-        int y_range_high = this.location_y + vision;
-        List<int[]> vision = new ArrayList<>();
+
+        int x_range_low = this.location_x - this.vision;
+        int x_range_high = this.location_x + this.vision;
+        int y_range_low = this.location_y - this.vision;
+        int y_range_high = this.location_y + this.vision;
+
+        List<int[]> visionPatches = new ArrayList<>();
 
         for(int i = x_range_low; i <= x_range_high; i++){
             for(int j = y_range_low; j <= y_range_high; j++){
-                int x = i, y = j;
+                int currentX = i;
+                int currentY = j;
+                // Manhattan distance
+                if ((Math.abs(this.location_x - i) + Math.abs(this.location_y - j) <= this.vision)) {
+                    // wrap around if going out of map
+                    if (i < 0) {
+                        currentX = width + i;
+                    } else if (i >= width) {
+                        currentX = i - width ;
+                    }
+                    if (j < 0){
+                        currentY = height + j;
+                    } else if (j >= height){
+                        currentY = j - height ;
+                    }
 
-                if(x < 0) x += width;
-                else if (x > width - 1) x -= width;
-
-                if(y < 0) y += height;
-                else if (y > height - 1) y -= height;
-
-                vision.add(new int[] {x, y});
+                    visionPatches.add(new int[] {currentX, currentY});
+                }
             }
         }
 
-        return vision;
+        return visionPatches;
     }
 
     /**
