@@ -6,7 +6,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class Entry extends Application {
+public class Main extends Application {
 
     public static Model model;
 
