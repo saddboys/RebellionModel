@@ -26,7 +26,7 @@ public class Police extends Turtle{
                 rebelling_agents.add(((Agent) turtle));
             }
         }
-        if(rebelling_agents.size() > 0){
+        if(rebelling_agents.size() > 0 && Main.model.jailCount < Main.model.MAX_JAIL){
             Random rand = new Random();
             Agent agent = rebelling_agents.get(rand.nextInt(rebelling_agents.size()));
             map[agent.getLocationX()][agent.getLocationY()] = null;

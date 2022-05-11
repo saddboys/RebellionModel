@@ -47,6 +47,8 @@ public class Model {
 
     public int jailCount = 0;
 
+    public final int MAX_JAIL = 100;
+
     public Model(int width, int height){
         turtles = new ArrayList<>();
         agents = new ArrayList<>();
