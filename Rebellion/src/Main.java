@@ -1,17 +1,37 @@
-/**
- * Runs the model
- */
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
-public class Main {
+import java.io.IOException;
+
+public class Entry extends Application {
 
     public static Model model;
-    public static void main(String[] args) {
-	    // TODO
+
+    public static void main(String[] args){
+        launch(args);
+    }
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        initialize(primaryStage);
+    }
+
+
+
+    public void initialize(Stage primaryStage) throws IOException {
+
         model = new Model(30, 30);
-        model.setup();
-        while (true){
-            model.passTurn();
-            System.out.println("active agent: " + model.checkSum() + "  jail count: " + model.jailCount);
-        }
+
+        // load the layout from the fxml file
+        FXMLLoader loader = new FXMLLoader((getClass().getResource("layoutfx.fxml")));
+        Parent root = loader.load();
+
+        primaryStage.setTitle("Rebellion");
+        primaryStage.setScene(new Scene(root));
+        primaryStage.show();
     }
 }
+
