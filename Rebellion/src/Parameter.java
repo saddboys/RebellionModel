@@ -43,7 +43,7 @@ public class Parameter {
         legitimacy = legit;
     }
 
-    public static double getMaxJailTerm(){
+    public static int getMaxJailTerm(){
         return maxJailTerm;
     }
 

@@ -8,9 +8,9 @@ public class Model {
     public static final double K_ARREST = 2.3;
 
     // The density of Agents in comparison to empty space
-    private double initialDensityAgent = 0.50;
+    private double initialDensityAgent = Parameter.getInitialDensityAgent();
     // The density of Cops in relation to empty space
-    private double initialDensityCops = 0.05;
+    private double initialDensityCops = Parameter.getInitialDensityCops();
 
     // The minimum and maximum risk aversion for revolt for agents
     private double minRiskAversion = 0.0;
@@ -21,13 +21,13 @@ public class Model {
 
     // The times someone can be arrested for
     private int minJailTerm = 5;
-    private int maxJailTerm = 25;
+    private int maxJailTerm = Parameter.getMaxJailTerm();
 
     // Vision for each turtle (tiles)
     private int vision = 3;
 
     // Initial Government legitimacy
-    private double legitimacy = 0.80;
+    private double legitimacy = Parameter.getLegitimacy();
 
     // List of all turtles
     private List<Turtle> turtles;
