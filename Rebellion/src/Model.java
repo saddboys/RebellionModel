@@ -17,7 +17,7 @@ public class Model {
     private double maxRiskAversion = 1.0;
 
     // The revolt threshold for agents
-    private double revoltThreshold = 0.05;
+    private double revoltThreshold = 0.1;
 
     // The times someone can be arrested for
     private int minJailTerm = 5;
