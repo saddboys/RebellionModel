@@ -23,7 +23,7 @@ public class Main extends Application {
 
     public void initialize(Stage primaryStage) throws IOException {
 
-        model = new Model(30, 30);
+
 
         // load the layout from the fxml file
         FXMLLoader loader = new FXMLLoader((getClass().getResource("layoutfx.fxml")));
