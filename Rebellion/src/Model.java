@@ -212,17 +212,20 @@ public class Model {
     public int[] checkSum(){
         int width = this.turtleMap[0].length;
         int height = this.turtleMap.length;
-        int[] res = new int[] {0, 0};
+        int[] res = new int[] {0, 0, 0};
 
         for(int i = 0; i < width; i++){
             for(int j = 0; j < height; j++){
                 Turtle turtle = this.turtleMap[i][j];
-                if(turtle instanceof Agent){
+                if (turtle instanceof Agent) {
                     if(((Agent) turtle).getState() == AgentState.PASSIVE){
                         res[0] += 1;
                     }
-                    if(((Agent) turtle).getState() == AgentState.REBELLING){
+                    else if(((Agent) turtle).getState() == AgentState.REBELLING){
                         res[1] += 1;
+                    }
+                    else if(((Agent) turtle).getState() == AgentState.IMPRISONED){
+                        res[2] += 1;
                     }
                 }
             }

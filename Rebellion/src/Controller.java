@@ -33,7 +33,7 @@ public class Controller {
     @FXML
     private LineChart lineChart;
 
-    XYChart.Series activeAgent;
+    XYChart.Series passiveAgent;
     XYChart.Series jailAgent;
 
 
@@ -49,7 +49,7 @@ public class Controller {
             Parameter.setMaxJailTerm(Integer.parseInt(maxJailTerm.getText()));
 
             // initialize the model
-            Main.model =  new Model(30, 30);
+            Main.model =  new Model(40, 40);
             Main.model.setup();
             // initialize the line chart
             initVis();
@@ -74,20 +74,20 @@ public class Controller {
         List<Integer> jails = vis.getJail();
 
         for (int i = 0; i< actives.size();i++){
-            activeAgent.getData().add(new XYChart.Data(Integer.toString(i),actives.get(i)));
+            passiveAgent.getData().add(new XYChart.Data(Integer.toString(i),actives.get(i)));
             jailAgent.getData().add(new XYChart.Data(Integer.toString(i),jails.get(i)));
         }
 
-        lineChart.getData().add(activeAgent);
+        lineChart.getData().add(passiveAgent);
         lineChart.getData().add(jailAgent);
 
     }
 
     private void initVis(){
-        activeAgent = new XYChart.Series();
+        passiveAgent = new XYChart.Series();
         jailAgent= new XYChart.Series();
 
-        activeAgent.setName("activeAgent");
+        passiveAgent.setName("passiveAgent");
         jailAgent.setName("jailAgent");
     }
 

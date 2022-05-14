@@ -5,7 +5,7 @@ public class Visualization{
 
     private boolean paused = false;
 
-    private List<Integer> activeAgents;
+    private List<Integer> passiveAgents;
     private List<Integer> jailAgents;
 
     private int turn = 0;
@@ -19,9 +19,9 @@ public class Visualization{
             i+=1;
             Main.model.passTurn();
             int[] res = Main.model.checkSum();
-            System.out.println("passive agent: " + res[0] + " rebel agent: " + res[1] + "  jail count: " + Main.model.jailCount);
+            System.out.println("passive agents: " + res[0] + " rebel agents: " + res[1] + "  jailed agents: " + Main.model.jailCount);
 
-            activeAgents.add(res[0]);
+            passiveAgents.add(res[0]);
             jailAgents.add(Main.model.jailCount);
 
         }
@@ -30,14 +30,14 @@ public class Visualization{
     }
 
     public void init(int numturn){
-        activeAgents = new ArrayList<>();
+        passiveAgents = new ArrayList<>();
         jailAgents = new ArrayList<>();
         this.turn = numturn;
 
     }
 
     public List<Integer> getActive(){
-        return activeAgents;
+        return passiveAgents;
     }
 
     public List<Integer> getJail(){
