@@ -36,6 +36,8 @@ public class Controller {
     XYChart.Series passiveAgent;
     XYChart.Series jailAgent;
 
+    XYChart.Series rebelAgent;
+
 
     Visualization vis;
 
@@ -72,23 +74,29 @@ public class Controller {
 
         List<Integer> actives = vis.getActive();
         List<Integer> jails = vis.getJail();
+        List<Integer> passives = vis.getPassive();
 
         for (int i = 0; i< actives.size();i++){
-            passiveAgent.getData().add(new XYChart.Data(Integer.toString(i),actives.get(i)));
+            passiveAgent.getData().add(new XYChart.Data(Integer.toString(i),passives.get(i)));
             jailAgent.getData().add(new XYChart.Data(Integer.toString(i),jails.get(i)));
+            rebelAgent.getData().add(new XYChart.Data(Integer.toString(i),actives.get(i)));
         }
 
-        lineChart.getData().add(passiveAgent);
+        lineChart.getData().add(rebelAgent);
         lineChart.getData().add(jailAgent);
+        lineChart.getData().add(passiveAgent);
 
     }
 
     private void initVis(){
         passiveAgent = new XYChart.Series();
         jailAgent= new XYChart.Series();
+        rebelAgent = new XYChart.Series();
 
-        passiveAgent.setName("passiveAgent");
+
         jailAgent.setName("jailAgent");
+        rebelAgent.setName("rebelAgent");
+        passiveAgent.setName("passiveAgent");
     }
 
 
