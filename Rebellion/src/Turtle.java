@@ -22,12 +22,11 @@ public abstract class Turtle {
      */
     public void move(Turtle[][] map){
 
-        List<int[]> empty_patch = getEmptyPatch();
+        List<int[]> empty_patch = getEmptyPatch(map);
 
         if(empty_patch.size() > 0){
             Random rand = new Random();
             int[] new_coordinate = empty_patch.get(rand.nextInt(empty_patch.size()));
-            map[this.location_x][this.location_y] = null;
             this.location_x = new_coordinate[0];
             this.location_y = new_coordinate[1];
             map[this.location_x][this.location_y] = this;
@@ -81,8 +80,7 @@ public abstract class Turtle {
      *
      * @return a list of coordinate within the vision and is unoccupied
      */
-    public List<int[]> getEmptyPatch(){
-        Turtle[][] turtleMap = Main.model.getTurtleMap();
+    public List<int[]> getEmptyPatch(Turtle[][] turtleMap){
         List<int[]> vision = getVision();
         List<int[]> empty_patch = new ArrayList<>();
 

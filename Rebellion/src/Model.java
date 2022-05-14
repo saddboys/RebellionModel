@@ -119,21 +119,26 @@ public class Model {
      *  Police Arrest
      */
     public void passTurn(){
+        // initialise next state
+        Turtle[][] nextMapState = new Turtle[width][height];
+
+        // do movements
+        for (Turtle t : turtles) {
+            t.move(nextMapState);
+        }
+
+        this.turtleMap = nextMapState;
 
         for (Agent agent: agents){
-            if(agent.getState() == AgentState.PASSIVE){
+            if (agent.getState() == AgentState.PASSIVE) {
                 agent.revoltOrNot();
-                agent.move(turtleMap);
             }else if(agent.getState() == AgentState.IMPRISONED){
                 agent.spendTimeInJail();
-            }else {
-                agent.move(turtleMap);
             }
         }
-        for (Police police: cops){
-            police.move(turtleMap);
-            police.arrest();
 
+        for (Police police: cops){
+            police.arrest();
         }
     }
 
@@ -210,24 +215,17 @@ public class Model {
      * @return how many agents is now in the map
      */
     public int[] checkSum(){
-        int width = this.turtleMap[0].length;
-        int height = this.turtleMap.length;
         int[] res = new int[] {0, 0, 0};
 
-        for(int i = 0; i < width; i++){
-            for(int j = 0; j < height; j++){
-                Turtle turtle = this.turtleMap[i][j];
-                if (turtle instanceof Agent) {
-                    if(((Agent) turtle).getState() == AgentState.PASSIVE){
-                        res[0] += 1;
-                    }
-                    else if(((Agent) turtle).getState() == AgentState.REBELLING){
-                        res[1] += 1;
-                    }
-                    else if(((Agent) turtle).getState() == AgentState.IMPRISONED){
-                        res[2] += 1;
-                    }
-                }
+        for (Agent a : this.agents){
+            if(a.getState() == AgentState.PASSIVE){
+                res[0] += 1;
+            }
+            else if(a.getState() == AgentState.REBELLING){
+                res[1] += 1;
+            }
+            else if(a.getState() == AgentState.IMPRISONED){
+                res[2] += 1;
             }
         }
         return res;
