@@ -18,7 +18,8 @@ public class Visualization extends Thread{
             }
 
             Main.model.passTurn();
-            System.out.println("active agent: " + Main.model.checkSum() + "  jail count: " + Main.model.jailCount);
+            int[] res = Main.model.checkSum();
+            System.out.println("passive agent: " + res[0] + " rebel agent: " + res[1] + "  jail count: " + Main.model.jailCount);
 
         }
     }

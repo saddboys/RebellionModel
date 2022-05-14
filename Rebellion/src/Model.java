@@ -209,15 +209,21 @@ public class Model {
      * calculate how many agents is now in the map
      * @return how many agents is now in the map
      */
-    public int checkSum(){
+    public int[] checkSum(){
         int width = this.turtleMap[0].length;
         int height = this.turtleMap.length;
-        int res = 0;
+        int[] res = new int[] {0, 0};
 
         for(int i = 0; i < width; i++){
             for(int j = 0; j < height; j++){
-                if(this.turtleMap[i][j] != null){
-                    res += 1;
+                Turtle turtle = this.turtleMap[i][j];
+                if(turtle instanceof Agent){
+                    if(((Agent) turtle).getState() == AgentState.PASSIVE){
+                        res[0] += 1;
+                    }
+                    if(((Agent) turtle).getState() == AgentState.REBELLING){
+                        res[1] += 1;
+                    }
                 }
             }
         }
