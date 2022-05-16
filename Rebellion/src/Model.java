@@ -8,26 +8,26 @@ public class Model {
     public static final double K_ARREST = 2.3;
 
     // The density of Agents in comparison to empty space
-    private double initialDensityAgent = 0.50;
+    private double initialDensityAgent = Parameter.getInitialDensityAgent();
     // The density of Cops in relation to empty space
-    private double initialDensityCops = 0.05;
+    private double initialDensityCops = Parameter.getInitialDensityCops();
 
     // The minimum and maximum risk aversion for revolt for agents
     private double minRiskAversion = 0.0;
     private double maxRiskAversion = 1.0;
 
     // The revolt threshold for agents
-    private double revoltThreshold = 0.05;
+    private double revoltThreshold = 0.1;
 
     // The times someone can be arrested for
     private int minJailTerm = 5;
-    private int maxJailTerm = 25;
+    private int maxJailTerm = Parameter.getMaxJailTerm();
 
     // Vision for each turtle (tiles)
     private int vision = 3;
 
     // Initial Government legitimacy
-    private double legitimacy = 0.80;
+    private double legitimacy = Parameter.getLegitimacy();
 
     // List of all turtles
     private List<Turtle> turtles;
@@ -121,21 +121,26 @@ public class Model {
      *  Police Arrest
      */
     public void passTurn(){
+        // initialise next state
+        Turtle[][] nextMapState = new Turtle[width][height];
+
+        // do movements
+        for (Turtle t : turtles) {
+            t.move(nextMapState);
+        }
+
+        this.turtleMap = nextMapState;
 
         for (Agent agent: agents){
-            if(agent.getState() == AgentState.PASSIVE){
+            if (agent.getState() == AgentState.PASSIVE) {
                 agent.revoltOrNot();
-                agent.move(turtleMap);
             }else if(agent.getState() == AgentState.IMPRISONED){
                 agent.spendTimeInJail();
-            }else {
-                agent.move(turtleMap);
             }
         }
-        for (Police police: cops){
-            police.move(turtleMap);
-            police.arrest();
 
+        for (Police police: cops){
+            police.arrest();
         }
     }
 
@@ -211,16 +216,18 @@ public class Model {
      * calculate how many agents is now in the map
      * @return how many agents is now in the map
      */
-    public int checkSum(){
-        int width = this.turtleMap[0].length;
-        int height = this.turtleMap.length;
-        int res = 0;
+    public int[] checkSum(){
+        int[] res = new int[] {0, 0, 0};
 
-        for(int i = 0; i < width; i++){
-            for(int j = 0; j < height; j++){
-                if(this.turtleMap[i][j] != null){
-                    res += 1;
-                }
+        for (Agent a : this.agents){
+            if(a.getState() == AgentState.PASSIVE){
+                res[0] += 1;
+            }
+            else if(a.getState() == AgentState.REBELLING){
+                res[1] += 1;
+            }
+            else if(a.getState() == AgentState.IMPRISONED){
+                res[2] += 1;
             }
         }
         return res;
