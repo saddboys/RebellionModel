@@ -232,7 +232,7 @@ public class Model {
     }
 
     public void incrementLegitimacy(){
-        this.legitimacy = 0.8 + (1 - 0.8) * (jailCount * 1.0)/agents.size();
+        this.legitimacy = Parameter.getLegitimacy() + (1 - Parameter.getLegitimacy()) * (jailCount * 1.0)/agents.size();
         System.out.println(this.legitimacy);
     }
 }
