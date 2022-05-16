@@ -47,7 +47,9 @@ public class Model {
 
     public int jailCount = 0;
 
-    private boolean isRebel = false;
+    public boolean isRebel = false;
+
+    public int rebel_count;
 
 
 
@@ -58,6 +60,8 @@ public class Model {
 
         this.width = width;
         this.height = height;
+
+        rebel_count = 0;
 
         turtleMap = new Turtle[width][height];
     }
@@ -143,6 +147,8 @@ public class Model {
         for (Police police: cops){
             police.arrest();
         }
+
+        rebel_count();
         this.isRebel = false;
     }
 
@@ -236,5 +242,10 @@ public class Model {
     }
 
 
-    public int rebel_count(){}
+    public int rebel_count(){
+        if (isRebel) rebel_count++;
+        else rebel_count = 0;
+        System.out.println(rebel_count);
+        return rebel_count;
+    }
 }
