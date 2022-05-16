@@ -47,7 +47,9 @@ public class Model {
 
     public int jailCount = 0;
 
-    public boolean isRebel = false;
+    private boolean isRebel = false;
+
+
 
     public Model(int width, int height){
         turtles = new ArrayList<>();
@@ -225,4 +227,7 @@ public class Model {
         }
         return res;
     }
+
+
+    public int rebel_count()
 }
