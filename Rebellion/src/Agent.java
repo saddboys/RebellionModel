@@ -44,7 +44,7 @@ public class Agent extends Turtle{
     public void revoltOrNot() {
         Turtle[][] map = Main.model.getTurtleMap();
         double numCops = 0;
-        double numRebels = 0;
+        double numRebels = 1; // netlogo model has base number as 1
 
         List<int[]> visionPatches = getVision();
         for (int[] location : visionPatches){
@@ -58,10 +58,11 @@ public class Agent extends Turtle{
             }
         }
 
-        arrestProbability = 1 - Math.exp(-Model.K_ARREST * (numCops / numRebels));
+        arrestProbability = 1 - Math.exp((- Model.K_ARREST) * (numCops / numRebels));
         netRisk = riskAversion * arrestProbability;
         grievance = perceivedHardship * (1 - Main.model.getGovt().getLegitimacy());
         // rebel if values are over threshold
+        // System.out.println(grievance + " " + netRisk);
         if (grievance - netRisk > revoltThreshold){
             this.state = AgentState.REBELLING;
         }
