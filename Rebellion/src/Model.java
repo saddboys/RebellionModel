@@ -29,6 +29,8 @@ public class Model {
     // Initial Government legitimacy
     private double legitimacy = Parameter.getLegitimacy();
 
+    public static List<Agent> newRebels = new ArrayList<>();
+
     // List of all turtles
     private List<Turtle> turtles;
     private List<Agent> agents;
@@ -110,6 +112,8 @@ public class Model {
             cops.add(p);
             turtleMap[coord[0]][coord[1]] = p;
         }
+        System.out.println(agents.size());
+        System.out.println(cops.size());
     }
 
     /**
@@ -129,17 +133,26 @@ public class Model {
 
         this.turtleMap = nextMapState;
 
+        // calculate next state revolts, and spend some time in jail
         for (Agent agent: agents){
             if (agent.getState() == AgentState.PASSIVE) {
                 agent.revoltOrNot();
-            }else if(agent.getState() == AgentState.IMPRISONED){
+            } else if (agent.getState() == AgentState.IMPRISONED){
+                // releasing from jail in current state should not affect model
                 agent.spendTimeInJail();
             }
         }
 
+        // arrest rebels in current state
         for (Police police: cops){
             police.arrest();
         }
+
+        // update to rebelling agents for next state and clear
+        for (Agent agent : newRebels){
+            agent.setState(AgentState.REBELLING);
+        }
+        newRebels.clear();
     }
 
     public Turtle[][] getTurtleMap() {
@@ -230,4 +243,6 @@ public class Model {
         }
         return res;
     }
+
+
 }

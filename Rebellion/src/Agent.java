@@ -51,20 +51,20 @@ public class Agent extends Turtle{
             Turtle currentTurtle = map[location[0]][location[1]];
             // find number of police and rebels in vision range
             if (currentTurtle instanceof Police) {
-                numCops++;
+                numCops = numCops + 1;
             } else if (currentTurtle instanceof Agent &&
                     ((Agent) currentTurtle).state.equals(AgentState.REBELLING)) {
-                numRebels++;
+                numRebels = numRebels + 1;
             }
         }
-
-        arrestProbability = 1 - Math.exp((- Model.K_ARREST) * (numCops / numRebels));
+        System.out.println(numRebels);
+        arrestProbability = 1 - Math.exp((- Model.K_ARREST) * Math.floor(numCops / numRebels));
         netRisk = riskAversion * arrestProbability;
         grievance = perceivedHardship * (1 - Main.model.getGovt().getLegitimacy());
         // rebel if values are over threshold
         // System.out.println(grievance + " " + netRisk);
-        if (grievance - netRisk > revoltThreshold){
-            this.state = AgentState.REBELLING;
+        if ((grievance - netRisk) > revoltThreshold){
+            Model.newRebels.add(this);
         }
     }
 
@@ -97,6 +97,10 @@ public class Agent extends Turtle{
 
     public AgentState getState(){
         return this.state;
+    }
+
+    public void setState(AgentState state) {
+        this.state = state;
     }
 
     public int getLocationX(){
