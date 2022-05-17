@@ -24,7 +24,7 @@ public class Model {
     private int maxJailTerm = Parameter.getMaxJailTerm();
 
     // Vision for each turtle (tiles)
-    private int vision = 3;
+    private int vision = Parameter.getVision();
 
     // Initial Government legitimacy
     private double legitimacy = Parameter.getLegitimacy();

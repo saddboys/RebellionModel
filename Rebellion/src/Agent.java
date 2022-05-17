@@ -52,12 +52,12 @@ public class Agent extends Turtle{
             // find number of police and rebels in vision range
             if (currentTurtle instanceof Police) {
                 numCops = numCops + 1;
-            } else if (currentTurtle instanceof Agent &&
+            }
+            if (currentTurtle instanceof Agent &&
                     ((Agent) currentTurtle).state.equals(AgentState.REBELLING)) {
                 numRebels = numRebels + 1;
             }
         }
-        System.out.println(numRebels);
         arrestProbability = 1 - Math.exp((- Model.K_ARREST) * Math.floor(numCops / numRebels));
         netRisk = riskAversion * arrestProbability;
         grievance = perceivedHardship * (1 - Main.model.getGovt().getLegitimacy());
