@@ -43,8 +43,6 @@ public class Controller {
 
     public void setUp(ActionEvent event){
         try {
-            // initialize the model
-            Main.model =  new Model(40, 40);
             //setting the parameter
             Parameter.setInitialDensityCops(Double.parseDouble(initCopDensityField.getText()));
             Parameter.setInitialDensityAgent(Double.parseDouble(initAgentDensityField.getText()));
@@ -52,6 +50,8 @@ public class Controller {
             Parameter.setVision(Integer.parseInt(vision.getText()));
             Parameter.setMaxJailTerm(Integer.parseInt(maxJailTerm.getText()));
 
+            // initialize the model
+            Main.model =  new Model(40, 40);
 
             Main.model.setup();
             // initialize the line chart
