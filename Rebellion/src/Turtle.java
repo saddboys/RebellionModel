@@ -7,24 +7,47 @@ import java.util.Random;
  */
 public abstract class Turtle {
 
+    // coords on the map for this turtle
     private int location_x;
     private int location_y;
+    //vision of the turtle
     protected int vision;
 
+    /**
+     * creates a turtle at location x and y, with vision range vision
+     * @param vision
+     * @param x
+     * @param y
+     */
     public Turtle(int vision, int x, int y){
         this.vision = vision;
         this.location_x = x;
         this.location_y = y;
     }
 
+    /**
+     * get location on map (x)
+     * @return int for x coord
+     */
     public int getLocation_x() {
         return location_x;
     }
 
+    /**
+     * get location on map (y)
+     * @return int for y coord
+     */
     public int getLocation_y() {
         return location_y;
     }
 
+    /**
+     * changes the location of the current turtle on the map,
+     * note that it does not clear the current map location
+     * @param location_x
+     * @param location_y
+     * @param map
+     */
     public void setLocation(int location_x, int location_y, Turtle[][] map) {
         this.location_x = location_x;
         this.location_y = location_y;
@@ -39,14 +62,15 @@ public abstract class Turtle {
 
         if(empty_patch.size() > 0){
             Random rand = new Random();
-            int[] new_coordinate = empty_patch.get(rand.nextInt(empty_patch.size()));
+            int[] new_coordinate = empty_patch.get(
+                    rand.nextInt(empty_patch.size()));
             setLocation(new_coordinate[0], new_coordinate[1], map);
         }
     }
 
     /**
      *
-     * @return A list of coordinate within the vision
+     * @return A list of coordinates within the vision range
      */
     public List<int[]> getVision(Turtle[][] map){
 
@@ -66,7 +90,9 @@ public abstract class Turtle {
                 int currentY = j;
 
                 // calculate direct line distance
-                double distance = Math.sqrt(Math.pow(currentY - this.location_y, 2) + (Math.pow(currentX - this.location_x, 2)));
+                double distance = Math.sqrt(
+                        Math.pow(currentY - this.location_y, 2) +
+                                (Math.pow(currentX - this.location_x, 2)));
                 if (distance <= vision) {
                     if (i < 0) {
                         currentX = width + i;
@@ -90,7 +116,8 @@ public abstract class Turtle {
 
     /**
      *
-     * @return a list of coordinate within the vision and is unoccupied OR has imprisoned persons
+     * @return a list of coordinate within the vision and is unoccupied OR
+     * has imprisoned persons
      */
     public List<int[]> getEmptyPatch(Turtle[][] turtleMap){
         List<int[]> vision = getVision(turtleMap);
@@ -100,7 +127,8 @@ public abstract class Turtle {
             Turtle a = turtleMap[coordinate[0]][coordinate[1]];
             if (a == null ||
                     (a instanceof Agent &&
-                            ((Agent) a).getState().equals(AgentState.IMPRISONED))) {
+                            ((Agent) a).getState()
+                                    .equals(AgentState.IMPRISONED))) {
                 empty_patch.add(coordinate);
             }
         }

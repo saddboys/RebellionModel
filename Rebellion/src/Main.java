@@ -25,7 +25,8 @@ public class Main extends Application {
 
 
         // load the layout from the fxml file
-        FXMLLoader loader = new FXMLLoader((getClass().getResource("layoutfx.fxml")));
+        FXMLLoader loader = new FXMLLoader(
+                (getClass().getResource("layoutfx.fxml")));
         Parent root = loader.load();
 
         primaryStage.setTitle("Rebellion");

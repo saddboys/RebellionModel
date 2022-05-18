@@ -36,7 +36,9 @@ public class Model {
     private List<Agent> agents;
     private List<Police> cops;
 
+    // map of the world
     private Turtle[][] turtleMap;
+    // government for the world
     private Government govt;
 
     //value range for perceived hardship of agents
@@ -49,6 +51,11 @@ public class Model {
 
     public int jailCount = 0;
 
+    /**
+     * initialises a model map with default values with provided size
+     * @param width
+     * @param height
+     */
     public Model(int width, int height){
         turtles = new ArrayList<>();
         agents = new ArrayList<>();
@@ -95,10 +102,12 @@ public class Model {
         for (int i = 0; i < numAgent; i++){
             int[] coord = placements.remove(0);
             double hardship = minPerceivedHardship +
-                    (maxPerceivedHardship - minPerceivedHardship) * r.nextDouble();
+                    (maxPerceivedHardship - minPerceivedHardship)
+                            * r.nextDouble();
             double riskAversion = minRiskAversion +
                     (maxRiskAversion - minRiskAversion) * r.nextDouble();
-            Agent a = new Agent(vision, coord[0], coord[1], riskAversion, hardship, revoltThreshold);
+            Agent a = new Agent(vision, coord[0], coord[1],
+                    riskAversion, hardship, revoltThreshold);
             turtles.add(a);
             agents.add(a);
             turtleMap[coord[0]][coord[1]] = a;
@@ -117,7 +126,8 @@ public class Model {
     }
 
     /**
-     * Does all the checks for the model and movements for when a turn needs to be passed:
+     * Does all the checks for the model and movements for when a turn needs
+     * to be passed:
      *  Turtles Move
      *  Agents Rebel
      *  Police Arrest
@@ -128,7 +138,8 @@ public class Model {
 
         // do movements
         for (Turtle t : turtles) {
-            if ((t instanceof Agent && !((Agent) t).getState().equals(AgentState.IMPRISONED)) || t instanceof Police) {
+            if ((t instanceof Agent && !((Agent) t).getState()
+                    .equals(AgentState.IMPRISONED)) || t instanceof Police) {
                 t.move(nextMapState);
             }
         }
@@ -164,39 +175,35 @@ public class Model {
 
     }
 
-    public void visualise(){
-        int count = 0;
-        for(int i = 0; i < width; i++){
-            for(int j = 0; j < height; j++){
-                Turtle t = turtleMap[i][j];
-                if (t instanceof Agent && ((Agent) t).getState().equals(AgentState.PASSIVE)) {
-                    count++;
-                } else if (t instanceof Agent && ((Agent) t).getState().equals(AgentState.REBELLING)) {
-                    count++;
-                } else if (t instanceof Police) {
-                    count++;
-                }
-            }
-        }
-
-        if (count + jailCount != turtles.size()){
-            System.out.println("ERROR: count: " + count + " jailCount: " + jailCount + " total: " + (jailCount + count));
-        }
-    }
-
+    /**
+     * returns the turtle map
+     * @return
+     */
     public Turtle[][] getTurtleMap() {
         return turtleMap;
     }
 
+    /**
+     * adds new rebels to be updated in the next turn
+     * @param a
+     */
     public void addNewRebels(Agent a){
         this.newRebels.add(a);
     }
 
+    /**
+     * gets the government of world
+     * @return
+     */
 
     public Government getGovt() {
         return govt;
     }
 
+    /**
+     * gets the max jail term
+     * @return
+     */
     public int getMaxJailTerm(){
         return this.maxJailTerm;
     }
@@ -221,6 +228,4 @@ public class Model {
         }
         return res;
     }
-
-
 }

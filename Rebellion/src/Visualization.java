@@ -1,18 +1,26 @@
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class for handling visualisation running and initialisation
+ */
 public class Visualization{
 
     private boolean paused = false;
 
+    // lists of all agents of interest
     private List<Integer> passiveAgents;
     private List<Integer> jailAgents;
 
     private List<Integer> rebelAgents;
 
+    // the time that it is currently
     private int turn = 0;
 
 
+    /**
+     * run visualisation
+     */
     public void run(){
 
         int i = 0;
@@ -21,17 +29,18 @@ public class Visualization{
             i+=1;
             Main.model.passTurn();
             int[] res = Main.model.checkSum();
-            //System.out.println("passive agents: " + res[0] + " rebel agents: " + res[1] + "  jailed agents: " + Main.model.jailCount);
 
             passiveAgents.add(res[0]);
             rebelAgents.add(res[1]);
             jailAgents.add(Main.model.jailCount);
 
         }
-
-
     }
 
+    /**
+     * initialise visualisation with empty lists
+     * @param numturn
+     */
     public void init(int numturn){
         passiveAgents = new ArrayList<>();
         jailAgents = new ArrayList<>();
