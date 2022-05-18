@@ -15,7 +15,6 @@ public class Police extends Turtle{
      * Arrests a random rebelling agent in vision range
      */
     public void arrest(){
-        Main.model.visualise();
         Turtle[][] map = Main.model.getTurtleMap();
         List<int[]> visions = getVision(map);
         List<Agent> rebelling_agents = new ArrayList<>();
