@@ -126,9 +126,16 @@ public class Model {
         // initialise next state
         Turtle[][] nextMapState = new Turtle[width][height];
 
+        Turtle[][] prevMapState = this.getTurtleMap();
+        for(int i = 0; i < prevMapState.length; i++){
+            nextMapState[i] = new Turtle[prevMapState[i].length];
+            System.arraycopy(prevMapState[i], 0, nextMapState[i], 0, prevMapState[i].length);
+        }
+
         // do movements
         for (Turtle t : turtles) {
-            t.move(nextMapState);
+            if(t.location_x == -1) continue;
+            else t.move(nextMapState);
         }
 
         this.turtleMap = nextMapState;
@@ -213,8 +220,8 @@ public class Model {
         Random rand = new Random();
 
         List<int[]> empty_patch = new ArrayList<>();
-        for(int i = 0; i < width; i++){
-            for(int j = 0; j < height; j++){
+        for(int i = 0; i < height; i++){
+            for(int j = 0; j < width; j++){
                 if(this.turtleMap[i][j] == null){
                     empty_patch.add(new int[] {i, j});
                 }

@@ -27,6 +27,7 @@ public abstract class Turtle {
         if(empty_patch.size() > 0){
             Random rand = new Random();
             int[] new_coordinate = empty_patch.get(rand.nextInt(empty_patch.size()));
+            map[location_x][location_y] = null;
             this.location_x = new_coordinate[0];
             this.location_y = new_coordinate[1];
             map[this.location_x][this.location_y] = this;
