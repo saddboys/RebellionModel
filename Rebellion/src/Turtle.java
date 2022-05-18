@@ -57,9 +57,8 @@ public abstract class Turtle {
                 int currentY = j;
 
                 // calculate direct line distance
-                double distance = Math.sqrt(((currentX - this.location_x) ^ 2) + ((currentX - this.location_x) ^ 2));
-                if (distance < vision) {
-
+                double distance = Math.sqrt(Math.pow(currentY - this.location_y, 2) + (Math.pow(currentX - this.location_x, 2)));
+                if (distance <= vision) {
                     if (i < 0) {
                         currentX = width + i;
                     } else if (i >= width) {
