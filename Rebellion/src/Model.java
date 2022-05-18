@@ -121,8 +121,8 @@ public class Model {
             cops.add(p);
             turtleMap[coord[0]][coord[1]] = p;
         }
-        System.out.println(agents.size());
-        System.out.println(cops.size());
+        System.out.println("Agents: " + agents.size());
+        System.out.println("Cops: " + cops.size());
     }
 
     /**
@@ -210,7 +210,7 @@ public class Model {
 
     /**
      * calculate how many agents is now in the map
-     * @return how many agents is now in the map
+     * @return how many passive, rebelling, and imprisoned agents in map
      */
     public int[] checkSum(){
         int[] res = new int[] {0, 0, 0};
@@ -227,5 +227,25 @@ public class Model {
             }
         }
         return res;
+    }
+
+    public void setLegitimacy(double legitimacy) {
+        this.legitimacy = legitimacy;
+    }
+
+    public void setInitialDensityAgent(double initialDensityAgent) {
+        this.initialDensityAgent = initialDensityAgent;
+    }
+
+    public void setInitialDensityCops(double initialDensityCops) {
+        this.initialDensityCops = initialDensityCops;
+    }
+
+    public void setMaxJailTerm(int maxJailTerm) {
+        this.maxJailTerm = maxJailTerm;
+    }
+
+    public void setVision(int vision) {
+        this.vision = vision;
     }
 }

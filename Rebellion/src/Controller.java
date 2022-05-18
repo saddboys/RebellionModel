@@ -15,7 +15,6 @@ public class Controller {
     // all fields correspond to different parameters in visualisation
     @FXML
     private TextField initCopDensityField;
-
     @FXML
     private TextField initAgentDensityField;
     @FXML
