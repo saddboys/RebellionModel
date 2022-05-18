@@ -21,7 +21,7 @@ public class Visualization{
             i+=1;
             Main.model.passTurn();
             int[] res = Main.model.checkSum();
-            System.out.println("passive agents: " + res[0] + " rebel agents: " + res[1] + "  jailed agents: " + Main.model.jailCount);
+            //System.out.println("passive agents: " + res[0] + " rebel agents: " + res[1] + "  jailed agents: " + Main.model.jailCount);
 
             passiveAgents.add(res[0]);
             rebelAgents.add(res[1]);
