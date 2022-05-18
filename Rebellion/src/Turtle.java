@@ -7,8 +7,8 @@ import java.util.Random;
  */
 public abstract class Turtle {
 
-    protected int location_x;
-    protected int location_y;
+    private int location_x;
+    private int location_y;
     protected int vision;
 
     public Turtle(int vision, int x, int y){
@@ -17,20 +17,30 @@ public abstract class Turtle {
         this.location_y = y;
     }
 
+    public int getLocation_x() {
+        return location_x;
+    }
+
+    public int getLocation_y() {
+        return location_y;
+    }
+
+    public void setLocation(int location_x, int location_y, Turtle[][] map) {
+        this.location_x = location_x;
+        this.location_y = location_y;
+        map[location_x][location_y] = this;
+    }
+
     /**
      * Moves the actor to an empty space in vision range
      */
     public void move(Turtle[][] map){
-        // TODO get a random empty patch in vision and move there
         List<int[]> empty_patch = getEmptyPatch(map);
 
         if(empty_patch.size() > 0){
             Random rand = new Random();
             int[] new_coordinate = empty_patch.get(rand.nextInt(empty_patch.size()));
-            map[location_x][location_y] = null;
-            this.location_x = new_coordinate[0];
-            this.location_y = new_coordinate[1];
-            map[this.location_x][this.location_y] = this;
+            setLocation(new_coordinate[0], new_coordinate[1], map);
         }
     }
 
@@ -38,9 +48,8 @@ public abstract class Turtle {
      *
      * @return A list of coordinate within the vision
      */
-    public List<int[]> getVision(){
+    public List<int[]> getVision(Turtle[][] map){
 
-        Turtle[][] map = Main.model.getTurtleMap();
         int width = map[0].length;
         int height = map.length;
 
@@ -84,7 +93,7 @@ public abstract class Turtle {
      * @return a list of coordinate within the vision and is unoccupied OR has imprisoned persons
      */
     public List<int[]> getEmptyPatch(Turtle[][] turtleMap){
-        List<int[]> vision = getVision();
+        List<int[]> vision = getVision(turtleMap);
         List<int[]> empty_patch = new ArrayList<>();
 
         for(int[] coordinate: vision){

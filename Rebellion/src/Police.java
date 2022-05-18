@@ -15,9 +15,9 @@ public class Police extends Turtle{
      * Arrests a random rebelling agent in vision range
      */
     public void arrest(){
-
+        Main.model.visualise();
         Turtle[][] map = Main.model.getTurtleMap();
-        List<int[]> visions = getVision();
+        List<int[]> visions = getVision(map);
         List<Agent> rebelling_agents = new ArrayList<>();
         for (int[] coordinate: visions){
             Turtle turtle = map[coordinate[0]][coordinate[1]];
@@ -26,14 +26,13 @@ public class Police extends Turtle{
                 rebelling_agents.add(((Agent) turtle));
             }
         }
-        if(rebelling_agents.size() > 0){
+
+
+        if (rebelling_agents.size() > 0){
             Random rand = new Random();
             Agent agent = rebelling_agents.get(rand.nextInt(rebelling_agents.size()));
-
-            this.location_y = agent.getLocationY();
-            this.location_x = agent.getLocationX();
-
-            agent.arrest(Main.model.getMaxJailTerm());
+            this.setLocation(agent.getLocation_x(), agent.getLocation_y(), map);
+            agent.arrest(rand.nextInt(Main.model.getMaxJailTerm()));
             Main.model.jailCount += 1;
         }
     }

@@ -46,7 +46,7 @@ public class Agent extends Turtle{
         double numCops = 0;
         double numRebels = 1; // netlogo model has base number as 1
 
-        List<int[]> visionPatches = getVision();
+        List<int[]> visionPatches = getVision(map);
         for (int[] location : visionPatches){
             Turtle currentTurtle = map[location[0]][location[1]];
             // find number of police and rebels in vision range
@@ -64,7 +64,7 @@ public class Agent extends Turtle{
         // rebel if values are over threshold
         // System.out.println(grievance + " " + netRisk);
         if ((grievance - netRisk) > revoltThreshold){
-            Model.newRebels.add(this);
+            Main.model.addNewRebels(this);
         }
     }
 
@@ -99,16 +99,5 @@ public class Agent extends Turtle{
         this.state = state;
     }
 
-    public int getLocationX(){
-        return this.location_x;
-    }
 
-    public int getLocationY(){
-        return this.location_y;
-    }
-
-    public void setLocation(int x, int y){
-        this.location_x = x;
-        this.location_y = y;
-    }
 }

@@ -29,7 +29,7 @@ public class Model {
     // Initial Government legitimacy
     private double legitimacy = Parameter.getLegitimacy();
 
-    public static List<Agent> newRebels = new ArrayList<>();
+    public List<Agent> newRebels = new ArrayList<>();
 
     // List of all turtles
     private List<Turtle> turtles;
@@ -125,83 +125,73 @@ public class Model {
     public void passTurn(){
         // initialise next state
         Turtle[][] nextMapState = new Turtle[width][height];
-        Turtle[][] prevMapState = this.getTurtleMap();
-
-        for(int i = 0; i < prevMapState.length; i++){
-            nextMapState[i] = new Turtle[prevMapState[i].length];
-            System.arraycopy(prevMapState[i], 0, nextMapState[i], 0, prevMapState[i].length);
-        }
 
         // do movements
         for (Turtle t : turtles) {
-            if (t instanceof Agent && !((Agent) t).getState().equals(AgentState.IMPRISONED)) {
+            if ((t instanceof Agent && !((Agent) t).getState().equals(AgentState.IMPRISONED)) || t instanceof Police) {
                 t.move(nextMapState);
             }
         }
-
         this.turtleMap = nextMapState;
+
 
         // calculate next state revolts, and spend some time in jail
         for (Agent agent: agents){
             if (agent.getState() == AgentState.PASSIVE) {
                 agent.revoltOrNot();
-            } else if (agent.getState() == AgentState.IMPRISONED){
-                // releasing from jail in current state should not affect model
-                agent.spendTimeInJail();
             }
         }
 
-        // arrest rebels in current state
-        for (Police police: cops){
-            police.arrest();
-        }
 
         // update to rebelling agents for next state and clear
         for (Agent agent : newRebels){
             agent.setState(AgentState.REBELLING);
         }
         newRebels.clear();
+
+        // arrest rebels in current state
+        for (Police police: cops){
+            police.arrest();
+        }
+
+        // spend time in jail
+        for (Agent agent: agents){
+            if (agent.getState() == AgentState.IMPRISONED) {
+                agent.spendTimeInJail();
+            }
+        }
+
+
+    }
+
+    public void visualise(){
+        int count = 0;
+        for(int i = 0; i < width; i++){
+            for(int j = 0; j < height; j++){
+                Turtle t = turtleMap[i][j];
+                if (t instanceof Agent && ((Agent) t).getState().equals(AgentState.PASSIVE)) {
+                    count++;
+                } else if (t instanceof Agent && ((Agent) t).getState().equals(AgentState.REBELLING)) {
+                    count++;
+                } else if (t instanceof Police) {
+                    count++;
+                }
+            }
+        }
+
+        if (count + jailCount != turtles.size()){
+            System.out.println("ERROR");
+        }
     }
 
     public Turtle[][] getTurtleMap() {
         return turtleMap;
     }
 
-    public void setInitialDensityAgent(double initialDensityAgent) {
-        this.initialDensityAgent = initialDensityAgent;
+    public void addNewRebels(Agent a){
+        this.newRebels.add(a);
     }
 
-    public void setInitialDensityCops(double initialDensityCops) {
-        this.initialDensityCops = initialDensityCops;
-    }
-
-    public void setMaxJailTerm(int maxJailTerm) {
-        this.maxJailTerm = maxJailTerm;
-    }
-
-    public void setMinJailTerm(int minJailTerm) {
-        this.minJailTerm = minJailTerm;
-    }
-
-    public void setMaxRiskAversion(double maxRiskAversion) {
-        this.maxRiskAversion = maxRiskAversion;
-    }
-
-    public void setMinRiskAversion(double minRiskAversion) {
-        this.minRiskAversion = minRiskAversion;
-    }
-
-    public void setRevoltThreshold(double revoltThreshold) {
-        this.revoltThreshold = revoltThreshold;
-    }
-
-    public void setVision(int vision) {
-        this.vision = vision;
-    }
-
-    public void setTurtleMap(Turtle[][] turtleMap) {
-        this.turtleMap = turtleMap;
-    }
 
     public Government getGovt() {
         return govt;
