@@ -180,7 +180,7 @@ public class Model {
         }
 
         if (count + jailCount != turtles.size()){
-            System.out.println("ERROR");
+            System.out.println("ERROR: count: " + count + " jailCount: " + jailCount + " total: " + (jailCount + count));
         }
     }
 
