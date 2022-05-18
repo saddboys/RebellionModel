@@ -28,21 +28,29 @@ public class Main extends Application {
         model.setVision(7);
         model.setup();
 
+        int[] turtles = model.checkSum();
+        int passive = turtles[0];
+        int rebelling = turtles[1];
+        int imprisoned = turtles[2];
+        String data = (0) + "," + passive + "," + rebelling
+                + "," + imprisoned + "\n";
+        myWriter.append(data);
+
         for (int i = 0; i < 500; i++) {
             model.passTurn();
-            int[] turtles = model.checkSum();
-            int passive = turtles[0];
-            int rebelling = turtles[1];
-            int imprisoned = turtles[2];
-            String data = i + "," + passive + "," + rebelling
+            turtles = model.checkSum();
+            passive = turtles[0];
+            rebelling = turtles[1];
+            imprisoned = turtles[2];
+            data = (i+1) + "," + passive + "," + rebelling
                     + "," + imprisoned + "\n";
             myWriter.append(data);
         }
         myWriter.close();
     }
     public static void main(String[] args) throws IOException {
-        //runWithoutVisualisation();
-        launch(args);
+        runWithoutVisualisation();
+        //launch(args);
     }
 
     @Override
