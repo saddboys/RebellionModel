@@ -55,6 +55,52 @@ public abstract class Turtle {
             for(int j = y_range_low; j <= y_range_high; j++){
                 int currentX = i;
                 int currentY = j;
+
+                // calculate direct line distance
+                double distance = Math.sqrt(((currentX - this.location_x) ^ 2) + ((currentX - this.location_x) ^ 2));
+                if (distance < vision) {
+
+                    if (i < 0) {
+                        currentX = width + i;
+                    } else if (i >= width) {
+                        currentX = i - width ;
+                    }
+                    if (j < 0){
+                        currentY = height + j;
+                    } else if (j >= height){
+                        currentY = j - height ;
+                    }
+                    // wrap around if going out of map
+                    visionPatches.add(new int[]{currentX, currentY});
+                }
+
+            }
+        }
+
+        return visionPatches;
+    }
+
+    /**
+     *
+     * @return A list of coordinate within the vision
+     */
+    /**public List<int[]> getVision(){
+
+        Turtle[][] map = Main.model.getTurtleMap();
+        int width = map[0].length;
+        int height = map.length;
+
+        int x_range_low = this.location_x - this.vision;
+        int x_range_high = this.location_x + this.vision;
+        int y_range_low = this.location_y - this.vision;
+        int y_range_high = this.location_y + this.vision;
+
+        List<int[]> visionPatches = new ArrayList<>();
+
+        for(int i = x_range_low; i <= x_range_high; i++){
+            for(int j = y_range_low; j <= y_range_high; j++){
+                int currentX = i;
+                int currentY = j;
                 // Manhattan distance
                 if ((Math.abs(this.location_x - i) + Math.abs(this.location_y - j) <= this.vision)) {
                     // wrap around if going out of map
@@ -75,7 +121,7 @@ public abstract class Turtle {
         }
 
         return visionPatches;
-    }
+    }**/
 
     /**
      *
