@@ -125,8 +125,8 @@ public class Model {
     public void passTurn(){
         // initialise next state
         Turtle[][] nextMapState = new Turtle[width][height];
-
         Turtle[][] prevMapState = this.getTurtleMap();
+
         for(int i = 0; i < prevMapState.length; i++){
             nextMapState[i] = new Turtle[prevMapState[i].length];
             System.arraycopy(prevMapState[i], 0, nextMapState[i], 0, prevMapState[i].length);
@@ -134,8 +134,9 @@ public class Model {
 
         // do movements
         for (Turtle t : turtles) {
-            if(t.location_x == -1) continue;
-            else t.move(nextMapState);
+            if (t instanceof Agent && !((Agent) t).getState().equals(AgentState.IMPRISONED)) {
+                t.move(nextMapState);
+            }
         }
 
         this.turtleMap = nextMapState;
@@ -208,26 +209,6 @@ public class Model {
 
     public int getMaxJailTerm(){
         return this.maxJailTerm;
-    }
-
-    /**
-     * randomly find a empty patch
-     * @return a coordinate
-     */
-    public int[] getRandomEmptyPatch(){
-        int width = this.turtleMap[0].length;
-        int height = this.turtleMap.length;
-        Random rand = new Random();
-
-        List<int[]> empty_patch = new ArrayList<>();
-        for(int i = 0; i < height; i++){
-            for(int j = 0; j < width; j++){
-                if(this.turtleMap[i][j] == null){
-                    empty_patch.add(new int[] {i, j});
-                }
-            }
-        }
-        return empty_patch.get(rand.nextInt(empty_patch.size()));
     }
 
     /**
