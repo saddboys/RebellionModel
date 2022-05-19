@@ -15,6 +15,11 @@ public class Main {
 
 
         model = new Model(40, 40);
+        /**model.setInitialDensityCops(0.04);
+        model.setInitialDensityAgent(0.7);
+        model.setLegitimacy(0.82);
+        model.setMaxJailTerm(30);
+        model.setVision(7);**/
         model.setup();
 
         int[] turtles = model.checkSum();
@@ -40,8 +45,19 @@ public class Main {
     public static void main(String[] args) throws IOException {
         try {
             readArgs(args);
-        } catch (NumberFormatException e) {
             runWithoutVisualisation();
+        } catch (NumberFormatException e) {
+            System.out.println(
+                    """
+                            Parameters must be in the following format:\s
+                            -cops <double>
+                            -agents <double>
+                            -legit <double>
+                            -jail <int>
+                            -vision <int>
+                            Separate all inputs with a empty space
+                            """
+            );
         }
     }
 
@@ -54,24 +70,23 @@ public class Main {
 
     private static void readParam(String[] param){
 
-            switch (param[0]) {
-                case "-cops":
-                    Parameter.setInitialDensityCops(Double.parseDouble(param[1]));
-                    break;
-                case "-agents":
-                    Parameter.setInitialDensityAgent(Double.parseDouble(param[1]));
-                    break;
-                case "-legit":
-                    Parameter.setLegitimacy(Double.parseDouble(param[1]));
-                    break;
-                case "-jail":
-                    Parameter.setMaxJailTerm(Integer.parseInt(param[1]));
-                    break;
-                case "-vision":
-                    Parameter.setVision(Integer.parseInt(param[1]));
-                    break;
-            }
-
+        switch (param[0]) {
+            case "-cops":
+                Parameter.setInitialDensityCops(Double.parseDouble(param[1]));
+                break;
+            case "-agents":
+                Parameter.setInitialDensityAgent(Double.parseDouble(param[1]));
+                break;
+            case "-legit":
+                Parameter.setLegitimacy(Double.parseDouble(param[1]));
+                break;
+            case "-jail":
+                Parameter.setMaxJailTerm(Integer.parseInt(param[1]));
+                break;
+            case "-vision":
+                Parameter.setVision(Integer.parseInt(param[1]));
+                break;
+        }
     }
 }
 
