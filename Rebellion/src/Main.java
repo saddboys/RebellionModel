@@ -15,11 +15,6 @@ public class Main {
 
 
         model = new Model(40, 40);
-        model.setInitialDensityCops(0.04);
-        model.setInitialDensityAgent(0.7);
-        model.setLegitimacy(0.82);
-        model.setMaxJailTerm(30);
-        model.setVision(7);
         model.setup();
 
         int[] turtles = model.checkSum();
@@ -43,7 +38,40 @@ public class Main {
         myWriter.close();
     }
     public static void main(String[] args) throws IOException {
-        runWithoutVisualisation();
+        try {
+            readArgs(args);
+        } catch (NumberFormatException e) {
+            runWithoutVisualisation();
+        }
+    }
+
+    private static void readArgs(String[] args){
+        for (int i = 0; i < args.length - 1; i = i + 2){
+            String[] param = new String[]{args[i], args[i+1]};
+            readParam(param);
+        }
+    }
+
+    private static void readParam(String[] param){
+
+            switch (param[0]) {
+                case "-cops":
+                    Parameter.setInitialDensityCops(Double.parseDouble(param[1]));
+                    break;
+                case "-agents":
+                    Parameter.setInitialDensityAgent(Double.parseDouble(param[1]));
+                    break;
+                case "-legit":
+                    Parameter.setLegitimacy(Double.parseDouble(param[1]));
+                    break;
+                case "-jail":
+                    Parameter.setMaxJailTerm(Integer.parseInt(param[1]));
+                    break;
+                case "-vision":
+                    Parameter.setVision(Integer.parseInt(param[1]));
+                    break;
+            }
+
     }
 }
 

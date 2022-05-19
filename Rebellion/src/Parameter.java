@@ -1,5 +1,5 @@
 /**
- * initialises the parameters of the visualisation
+ * initialises the parameters of the execution for CLI
  */
 public class Parameter {
 
