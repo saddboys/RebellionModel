@@ -10,17 +10,8 @@ public class Agent extends Turtle{
     // How the agent views the world contributing to their revolt risk.
     private double perceivedHardship;
 
-    // grievance = perceived-hardship * (1 - government-legitimacy)
-    private double grievance;
-
     // The agent's tolerance for risk of revolt
     private double riskAversion;
-
-    // The agent’s estimated arrest probability based on the police in vision range.
-    private double arrestProbability;
-
-    //the risk of revolt for the agent based on risk aversion, and the arrest probability of the agent.
-    private double netRisk;
 
     private int jailTerm;
 
@@ -37,33 +28,43 @@ public class Agent extends Turtle{
     }
 
     /**
-     * DAVID
-     * Determines whether or not the agent should revolt at this turn. If so, then the agent will be changed to
+     * Determines whether or not the agent should revolt at this turn.
+     * If so, then the agent will be changed to
      * revolting state. This is calculated based on net risk
      */
     public void revoltOrNot() {
         Turtle[][] map = Main.model.getTurtleMap();
         double numCops = 0;
-        double numRebels = 0;
+        double numRebels = 1; // netlogo model has base number as 1
 
-        List<int[]> visionPatches = getVision();
+        List<int[]> visionPatches = getVision(map);
         for (int[] location : visionPatches){
             Turtle currentTurtle = map[location[0]][location[1]];
             // find number of police and rebels in vision range
             if (currentTurtle instanceof Police) {
-                numCops++;
-            } else if (currentTurtle instanceof Agent &&
-                    ((Agent) currentTurtle).state.equals(AgentState.REBELLING)) {
-                numRebels++;
+                numCops = numCops + 1;
+            }
+            if (currentTurtle instanceof Agent &&
+                    ((Agent) currentTurtle).state
+                            .equals(AgentState.REBELLING)) {
+                numRebels = numRebels + 1;
             }
         }
-
-        arrestProbability = 1 - Math.exp(-Model.K_ARREST * (numCops / numRebels));
-        netRisk = riskAversion * arrestProbability;
-        grievance = perceivedHardship * (1 - Main.model.getGovt().getLegitimacy());
+        // The agent’s estimated arrest probability based on
+        // the police in vision range.
+        double arrestProbability = 1 - Math.exp((-Model.K_ARREST) *
+                Math.floor(numCops / numRebels));
+        //the risk of revolt for the agent based on risk aversion,
+        // and the arrest probability of the agent.
+        double netRisk = riskAversion * arrestProbability;
+        // grievance = perceived-hardship * (1 - government-legitimacy)
+        double grievance = perceivedHardship *
+                (1 - Main.model.getGovt().getLegitimacy());
         // rebel if values are over threshold
-        if (grievance - netRisk > revoltThreshold){
-            this.state = AgentState.REBELLING;
+        if ((grievance - netRisk) > revoltThreshold){
+            Main.model.addNewRebels(this);
+        } else {
+            Main.model.addNewPassives(this);
         }
     }
 
@@ -74,7 +75,6 @@ public class Agent extends Turtle{
     public void arrest(int term){
         this.jailTerm = term;
         this.state = AgentState.IMPRISONED;
-        this.setLocation(-1, -1);
     }
 
     /**
@@ -84,9 +84,6 @@ public class Agent extends Turtle{
         if (this.state == AgentState.IMPRISONED) {
             if (jailTerm == 0) {
                 this.state = AgentState.PASSIVE;
-                int[] new_location = Main.model.getRandomEmptyPatch();
-                this.setLocation(new_location[0], new_location[1]);
-                Main.model.getTurtleMap()[new_location[0]][new_location[1]] = this;
                 Main.model.jailCount -= 1;
             } else {
                 this.jailTerm--;
@@ -94,20 +91,21 @@ public class Agent extends Turtle{
         }
     }
 
+    /**
+     * gets the agent state (rebel, passive, imprisoned)
+     * @return
+     */
     public AgentState getState(){
         return this.state;
     }
 
-    public int getLocationX(){
-        return this.location_x;
+    /**
+     * sets the agent state  (rebel, passive, imprisoned)
+     * @param state
+     */
+    public void setState(AgentState state) {
+        this.state = state;
     }
 
-    public int getLocationY(){
-        return this.location_y;
-    }
 
-    public void setLocation(int x, int y){
-        this.location_x = x;
-        this.location_y = y;
-    }
 }

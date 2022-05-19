@@ -24,17 +24,24 @@ public class Model {
     private int maxJailTerm = Parameter.getMaxJailTerm();
 
     // Vision for each turtle (tiles)
-    private int vision = 3;
+    private int vision = Parameter.getVision();
 
     // Initial Government legitimacy
     private double legitimacy = Parameter.getLegitimacy();
+
+    // new rebels for next state
+    public List<Agent> newRebels = new ArrayList<>();
+    // new passive agents for next state
+    public List<Agent> newPassives = new ArrayList<>();
 
     // List of all turtles
     private List<Turtle> turtles;
     private List<Agent> agents;
     private List<Police> cops;
 
+    // map of the world
     private Turtle[][] turtleMap;
+    // government for the world
     private Government govt;
 
     //value range for perceived hardship of agents
@@ -47,6 +54,11 @@ public class Model {
 
     public int jailCount = 0;
 
+    /**
+     * initialises a model map with default values with provided size
+     * @param width
+     * @param height
+     */
     public Model(int width, int height){
         turtles = new ArrayList<>();
         agents = new ArrayList<>();
@@ -64,14 +76,26 @@ public class Model {
      */
     public void setup(){
         if (vision > width || vision > height){
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException(
+                    "vision cannot be more than width/height"
+            );
+        }
+        if (initialDensityAgent + initialDensityCops > 1.0) {
+            throw new IllegalArgumentException(
+                    "initial density of cops and agent must add to 1.0"
+            );
+        }
+        if (legitimacy < 0 || maxJailTerm < 0 ||
+            initialDensityAgent < 0 || initialDensityCops < 0 ||
+            vision < 0){
+            throw new IllegalArgumentException(
+                    "No argument may be negative"
+            );
         }
 
         govt = new Government(legitimacy);
 
-        if (initialDensityAgent + initialDensityCops > 1.0) {
-            throw new IllegalArgumentException();
-        }
+
 
         // Generate width height array for random selection(
         List<int[]> placements = new ArrayList<>();
@@ -93,10 +117,12 @@ public class Model {
         for (int i = 0; i < numAgent; i++){
             int[] coord = placements.remove(0);
             double hardship = minPerceivedHardship +
-                    (maxPerceivedHardship - minPerceivedHardship) * r.nextDouble();
+                    (maxPerceivedHardship - minPerceivedHardship)
+                            * r.nextDouble();
             double riskAversion = minRiskAversion +
                     (maxRiskAversion - minRiskAversion) * r.nextDouble();
-            Agent a = new Agent(vision, coord[0], coord[1], riskAversion, hardship, revoltThreshold);
+            Agent a = new Agent(vision, coord[0], coord[1],
+                    riskAversion, hardship, revoltThreshold);
             turtles.add(a);
             agents.add(a);
             turtleMap[coord[0]][coord[1]] = a;
@@ -110,10 +136,13 @@ public class Model {
             cops.add(p);
             turtleMap[coord[0]][coord[1]] = p;
         }
+        System.out.println("Agents: " + agents.size());
+        System.out.println("Cops: " + cops.size());
     }
 
     /**
-     * Does all the checks for the model and movements for when a turn needs to be passed:
+     * Does all the checks for the model and movements for when a turn needs
+     * to be passed:
      *  Turtles Move
      *  Agents Rebel
      *  Police Arrest
@@ -124,95 +153,85 @@ public class Model {
 
         // do movements
         for (Turtle t : turtles) {
-            t.move(nextMapState);
+            if ((t instanceof Agent && !((Agent) t).getState()
+                    .equals(AgentState.IMPRISONED)) || t instanceof Police) {
+                t.move(nextMapState);
+            }
         }
-
         this.turtleMap = nextMapState;
 
+        // calculate next state revolts, and spend some time in jail
         for (Agent agent: agents){
-            if (agent.getState() == AgentState.PASSIVE) {
+            if (agent.getState() == AgentState.PASSIVE ||
+                    agent.getState() == AgentState.REBELLING) {
                 agent.revoltOrNot();
-            }else if(agent.getState() == AgentState.IMPRISONED){
+            }
+        }
+
+        // update to rebelling and passive agents for next state and clear
+        for (Agent agent : newRebels){
+            agent.setState(AgentState.REBELLING);
+        }
+        newRebels.clear();
+        for (Agent agent : newPassives){
+            agent.setState(AgentState.PASSIVE);
+        }
+        newPassives.clear();
+
+        // arrest rebels in current state
+        for (Police police: cops){
+            police.arrest();
+        }
+
+        // spend time in jail
+        for (Agent agent: agents){
+            if (agent.getState() == AgentState.IMPRISONED) {
                 agent.spendTimeInJail();
             }
         }
 
-        for (Police police: cops){
-            police.arrest();
-        }
+
     }
 
+    /**
+     * returns the turtle map
+     * @return
+     */
     public Turtle[][] getTurtleMap() {
         return turtleMap;
     }
 
-    public void setInitialDensityAgent(double initialDensityAgent) {
-        this.initialDensityAgent = initialDensityAgent;
+    /**
+     * adds new rebels to be updated in the next turn
+     * @param a
+     */
+    public void addNewRebels(Agent a){
+        this.newRebels.add(a);
     }
 
-    public void setInitialDensityCops(double initialDensityCops) {
-        this.initialDensityCops = initialDensityCops;
+    public void addNewPassives(Agent a){
+        this.newPassives.add(a);
     }
 
-    public void setMaxJailTerm(int maxJailTerm) {
-        this.maxJailTerm = maxJailTerm;
-    }
-
-    public void setMinJailTerm(int minJailTerm) {
-        this.minJailTerm = minJailTerm;
-    }
-
-    public void setMaxRiskAversion(double maxRiskAversion) {
-        this.maxRiskAversion = maxRiskAversion;
-    }
-
-    public void setMinRiskAversion(double minRiskAversion) {
-        this.minRiskAversion = minRiskAversion;
-    }
-
-    public void setRevoltThreshold(double revoltThreshold) {
-        this.revoltThreshold = revoltThreshold;
-    }
-
-    public void setVision(int vision) {
-        this.vision = vision;
-    }
-
-    public void setTurtleMap(Turtle[][] turtleMap) {
-        this.turtleMap = turtleMap;
-    }
-
+    /**
+     * gets the government of world
+     * @return
+     */
     public Government getGovt() {
         return govt;
     }
 
+    /**
+     * gets the max jail term
+     * @return
+     */
     public int getMaxJailTerm(){
         return this.maxJailTerm;
     }
 
     /**
-     * randomly find a empty patch
-     * @return a coordinate
-     */
-    public int[] getRandomEmptyPatch(){
-        int width = this.turtleMap[0].length;
-        int height = this.turtleMap.length;
-        Random rand = new Random();
-
-        List<int[]> empty_patch = new ArrayList<>();
-        for(int i = 0; i < width; i++){
-            for(int j = 0; j < height; j++){
-                if(this.turtleMap[i][j] == null){
-                    empty_patch.add(new int[] {i, j});
-                }
-            }
-        }
-        return empty_patch.get(rand.nextInt(empty_patch.size()));
-    }
-
-    /**
      * calculate how many agents is now in the map
-     * @return how many agents is now in the map
+     * @return how many passive, rebelling, and imprisoned agents in map
      */
     public int[] checkSum(){
         int[] res = new int[] {0, 0, 0};
@@ -231,8 +250,28 @@ public class Model {
         return res;
     }
 
-    public void incrementLegitimacy(){
-        this.legitimacy = Parameter.getLegitimacy() + (1 - Parameter.getLegitimacy()) * (jailCount * 1.0)/agents.size();
+    public void incrementLegitimacy() {
+        this.legitimacy = Parameter.getLegitimacy() + (1 - Parameter.getLegitimacy()) * (jailCount * 1.0) / agents.size();
         System.out.println(this.legitimacy);
+    }
+    public void setLegitimacy(double legitimacy) {
+        this.legitimacy = legitimacy;
+    }
+
+    public void setInitialDensityAgent(double initialDensityAgent) {
+        this.initialDensityAgent = initialDensityAgent;
+    }
+
+    public void setInitialDensityCops(double initialDensityCops) {
+        this.initialDensityCops = initialDensityCops;
+    }
+
+    public void setMaxJailTerm(int maxJailTerm) {
+        this.maxJailTerm = maxJailTerm;
+    }
+
+    public void setVision(int vision) {
+        this.vision = vision;
+
     }
 }

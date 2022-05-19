@@ -1,3 +1,6 @@
+/**
+ * initialises the parameters of the execution for CLI
+ */
 public class Parameter {
 
     private static double initialDensityAgent = 0.70;

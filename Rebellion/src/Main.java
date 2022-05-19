@@ -1,36 +1,121 @@
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
+/**
+ * Runes the model itself
+ */
 
-import java.io.IOException;
+import java.io.*;
 
-public class Main extends Application {
+public class Main {
 
     public static Model model;
 
-    public static void main(String[] args){
-        launch(args);
+    /**
+     * Runs the model itself for 500 turns
+     * @throws IOException
+     */
+    public static void runWithoutVisualisation() throws IOException {
+        File csvOutputFile = new File("output.csv");
+        FileWriter myWriter = new FileWriter(csvOutputFile);
+        myWriter.write( "Iteration,Passive,Rebelling,Imprisoned\n" );
+
+
+        model = new Model(40, 40);
+        model.setup();
+
+        int[] turtles = model.checkSum();
+        int passive = turtles[0];
+        int rebelling = turtles[1];
+        int imprisoned = turtles[2];
+        String data = (0) + "," + passive + "," + rebelling
+                + "," + imprisoned + "\n";
+        myWriter.append(data);
+
+        for (int i = 0; i < 500; i++) {
+            model.passTurn();
+            turtles = model.checkSum();
+            passive = turtles[0];
+            rebelling = turtles[1];
+            imprisoned = turtles[2];
+            data = (i+1) + "," + passive + "," + rebelling
+                    + "," + imprisoned + "\n";
+            myWriter.append(data);
+        }
+        myWriter.close();
+    }
+    public static void main(String[] args) throws IOException {
+        try {
+            readArgs(args);
+            runWithoutVisualisation();
+            System.out.println("Completed! Output at output.csv");
+        } catch (NumberFormatException e) {
+            printHelp();
+        } catch (IllegalArgumentException e){
+            printHelp();
+            System.out.println(e.getMessage());
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        initialize(primaryStage);
+    /**
+     * Reads and sorts through the arguments to apply to
+     * set parameters
+     * @param args
+     */
+    private static void readArgs(String[] args){
+        for (int i = 0; i < args.length - 1; i = i + 2){
+            String[] param = new String[]{args[i], args[i+1]};
+            readParam(param);
+        }
     }
 
+    /**
+     * extracts parameters out of a single argument
+     * @param param
+     */
+    private static void readParam(String[] param){
 
-    public void initialize(Stage primaryStage) throws IOException {
+        switch (param[0]) {
+            case "-cops":
+                Parameter.setInitialDensityCops(Double.parseDouble(param[1]));
+                break;
+            case "-agents":
+                Parameter.setInitialDensityAgent(Double.parseDouble(param[1]));
+                break;
+            case "-legit":
+                Parameter.setLegitimacy(Double.parseDouble(param[1]));
+                break;
+            case "-jail":
+                Parameter.setMaxJailTerm(Integer.parseInt(param[1]));
+                break;
+            case "-vision":
+                Parameter.setVision(Integer.parseInt(param[1]));
+                break;
+            case "-h":
+                printHelp();
+                break;
+        }
+    }
 
-
-
-        // load the layout from the fxml file
-        FXMLLoader loader = new FXMLLoader((getClass().getResource("layoutfx.fxml")));
-        Parent root = loader.load();
-
-        primaryStage.setTitle("Rebellion");
-        primaryStage.setScene(new Scene(root));
-        primaryStage.show();
+    /**
+     * prints the help error message
+     */
+    public static void printHelp(){
+        System.out.println(
+                """
+                    Parameters must be in the following format:\s
+                    -cops <double> : Density of Cops in map, default 0.04
+                    -agents <double> : Density of Agents in map, default 0.7
+                    -legit <double> : Government legitimacy, default 0.82
+                    -jail <int> : Max jail term for agents, default 30
+                    -vision <int> : Vision for all agents, default 7
+                    
+                    Separate all inputs with a empty space
+                    cops + agents must be <= 1.0!
+                    
+                    e.g. Java Main -cops 0.05 -legit 0.7 -jail 30  -vision 3
+                    
+                    """
+        );
     }
 }
 
