@@ -29,14 +29,16 @@ public class Model {
     // Initial Government legitimacy
     private double legitimacy = Parameter.getLegitimacy();
 
-    public static List<Agent> newRebels = new ArrayList<>();
+    public List<Agent> newRebels = new ArrayList<>();
 
     // List of all turtles
     private List<Turtle> turtles;
     private List<Agent> agents;
     private List<Police> cops;
 
+    // map of the world
     private Turtle[][] turtleMap;
+    // government for the world
     private Government govt;
 
     //value range for perceived hardship of agents
@@ -49,6 +51,11 @@ public class Model {
 
     public int jailCount = 0;
 
+    /**
+     * initialises a model map with default values with provided size
+     * @param width
+     * @param height
+     */
     public Model(int width, int height){
         turtles = new ArrayList<>();
         agents = new ArrayList<>();
@@ -95,10 +102,12 @@ public class Model {
         for (int i = 0; i < numAgent; i++){
             int[] coord = placements.remove(0);
             double hardship = minPerceivedHardship +
-                    (maxPerceivedHardship - minPerceivedHardship) * r.nextDouble();
+                    (maxPerceivedHardship - minPerceivedHardship)
+                            * r.nextDouble();
             double riskAversion = minRiskAversion +
                     (maxRiskAversion - minRiskAversion) * r.nextDouble();
-            Agent a = new Agent(vision, coord[0], coord[1], riskAversion, hardship, revoltThreshold);
+            Agent a = new Agent(vision, coord[0], coord[1],
+                    riskAversion, hardship, revoltThreshold);
             turtles.add(a);
             agents.add(a);
             turtleMap[coord[0]][coord[1]] = a;
@@ -112,12 +121,13 @@ public class Model {
             cops.add(p);
             turtleMap[coord[0]][coord[1]] = p;
         }
-        System.out.println(agents.size());
-        System.out.println(cops.size());
+        System.out.println("Agents: " + agents.size());
+        System.out.println("Cops: " + cops.size());
     }
 
     /**
-     * Does all the checks for the model and movements for when a turn needs to be passed:
+     * Does all the checks for the model and movements for when a turn needs
+     * to be passed:
      *  Turtles Move
      *  Agents Rebel
      *  Police Arrest
@@ -125,95 +135,82 @@ public class Model {
     public void passTurn(){
         // initialise next state
         Turtle[][] nextMapState = new Turtle[width][height];
-        Turtle[][] prevMapState = this.getTurtleMap();
-
-        for(int i = 0; i < prevMapState.length; i++){
-            nextMapState[i] = new Turtle[prevMapState[i].length];
-            System.arraycopy(prevMapState[i], 0, nextMapState[i], 0, prevMapState[i].length);
-        }
 
         // do movements
         for (Turtle t : turtles) {
-            if (t instanceof Agent && !((Agent) t).getState().equals(AgentState.IMPRISONED)) {
+            if ((t instanceof Agent && !((Agent) t).getState()
+                    .equals(AgentState.IMPRISONED)) || t instanceof Police) {
                 t.move(nextMapState);
             }
         }
-
         this.turtleMap = nextMapState;
+
 
         // calculate next state revolts, and spend some time in jail
         for (Agent agent: agents){
             if (agent.getState() == AgentState.PASSIVE) {
                 agent.revoltOrNot();
-            } else if (agent.getState() == AgentState.IMPRISONED){
-                // releasing from jail in current state should not affect model
-                agent.spendTimeInJail();
             }
         }
 
-        // arrest rebels in current state
-        for (Police police: cops){
-            police.arrest();
-        }
 
         // update to rebelling agents for next state and clear
         for (Agent agent : newRebels){
             agent.setState(AgentState.REBELLING);
         }
         newRebels.clear();
+
+        // arrest rebels in current state
+        for (Police police: cops){
+            police.arrest();
+        }
+
+        // spend time in jail
+        for (Agent agent: agents){
+            if (agent.getState() == AgentState.IMPRISONED) {
+                agent.spendTimeInJail();
+            }
+        }
+
+
     }
 
+    /**
+     * returns the turtle map
+     * @return
+     */
     public Turtle[][] getTurtleMap() {
         return turtleMap;
     }
 
-    public void setInitialDensityAgent(double initialDensityAgent) {
-        this.initialDensityAgent = initialDensityAgent;
+    /**
+     * adds new rebels to be updated in the next turn
+     * @param a
+     */
+    public void addNewRebels(Agent a){
+        this.newRebels.add(a);
     }
 
-    public void setInitialDensityCops(double initialDensityCops) {
-        this.initialDensityCops = initialDensityCops;
-    }
-
-    public void setMaxJailTerm(int maxJailTerm) {
-        this.maxJailTerm = maxJailTerm;
-    }
-
-    public void setMinJailTerm(int minJailTerm) {
-        this.minJailTerm = minJailTerm;
-    }
-
-    public void setMaxRiskAversion(double maxRiskAversion) {
-        this.maxRiskAversion = maxRiskAversion;
-    }
-
-    public void setMinRiskAversion(double minRiskAversion) {
-        this.minRiskAversion = minRiskAversion;
-    }
-
-    public void setRevoltThreshold(double revoltThreshold) {
-        this.revoltThreshold = revoltThreshold;
-    }
-
-    public void setVision(int vision) {
-        this.vision = vision;
-    }
-
-    public void setTurtleMap(Turtle[][] turtleMap) {
-        this.turtleMap = turtleMap;
-    }
+    /**
+     * gets the government of world
+     * @return
+     */
 
     public Government getGovt() {
         return govt;
     }
 
+    /**
+     * gets the max jail term
+     * @return
+     */
     public int getMaxJailTerm(){
         return this.maxJailTerm;
     }
 
     /**
      * calculate how many agents is now in the map
-     * @return how many agents is now in the map
+     * @return how many passive, rebelling, and imprisoned agents in map
      */
     public int[] checkSum(){
         int[] res = new int[] {0, 0, 0};
@@ -232,5 +229,23 @@ public class Model {
         return res;
     }
 
+    public void setLegitimacy(double legitimacy) {
+        this.legitimacy = legitimacy;
+    }
 
+    public void setInitialDensityAgent(double initialDensityAgent) {
+        this.initialDensityAgent = initialDensityAgent;
+    }
+
+    public void setInitialDensityCops(double initialDensityCops) {
+        this.initialDensityCops = initialDensityCops;
+    }
+
+    public void setMaxJailTerm(int maxJailTerm) {
+        this.maxJailTerm = maxJailTerm;
+    }
+
+    public void setVision(int vision) {
+        this.vision = vision;
+    }
 }

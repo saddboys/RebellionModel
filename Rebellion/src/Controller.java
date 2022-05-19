@@ -7,12 +7,14 @@ import javafx.scene.control.*;
 
 import java.util.List;
 
-
+/**
+ * Controller for visualisation components
+ */
 public class Controller {
 
+    // all fields correspond to different parameters in visualisation
     @FXML
     private TextField initCopDensityField;
-
     @FXML
     private TextField initAgentDensityField;
     @FXML
@@ -41,26 +43,41 @@ public class Controller {
 
     Visualization vis;
 
+    /**
+     * setup visualisation with parameters for model
+     * @param event
+     */
     public void setUp(ActionEvent event){
         try {
             //setting the parameter
-            Parameter.setInitialDensityCops(Double.parseDouble(initCopDensityField.getText()));
-            Parameter.setInitialDensityAgent(Double.parseDouble(initAgentDensityField.getText()));
-            Parameter.setLegitimacy(Double.parseDouble(governmentLegitimacy.getText()));
-            Parameter.setVision(Integer.parseInt(vision.getText()));
-            Parameter.setMaxJailTerm(Integer.parseInt(maxJailTerm.getText()));
+            Parameter.setInitialDensityCops(
+                    Double.parseDouble(initCopDensityField.getText()));
+            Parameter.setInitialDensityAgent(
+                    Double.parseDouble(initAgentDensityField.getText()));
+            Parameter.setLegitimacy(
+                    Double.parseDouble(governmentLegitimacy.getText()));
+            Parameter.setVision(
+                    Integer.parseInt(vision.getText()));
+            Parameter.setMaxJailTerm(
+                    Integer.parseInt(maxJailTerm.getText()));
 
         }catch (Exception e){
             System.out.println(e);
         }
     }
 
+    /**
+     * runs visualisation
+     */
     public void run(){
 
         this.simulate();
         this.setVis(vis.getActive(),vis.getJail(),vis.getPassive());
     }
 
+    /**
+     * Averages the results of multiple model executions
+     */
     public void setAverageRunning(){
         int repeatTime = 5;
 
@@ -76,9 +93,12 @@ public class Controller {
             Visualization sample = this.simulate();
 
             for (int j =0; j < activesAva.size();j++){
-                activesAva.set(j, activesAva.get(j) + sample.getActive().get(j));
-                jailsAva.set(j, jailsAva.get(j) + sample.getJail().get(j));
-                passivesAva.set(j, passivesAva.get(j) + sample.getPassive().get(j));
+                activesAva.set(j, activesAva.get(j) +
+                        sample.getActive().get(j));
+                jailsAva.set(j, jailsAva.get(j) +
+                        sample.getJail().get(j));
+                passivesAva.set(j, passivesAva.get(j) +
+                        sample.getPassive().get(j));
             }
 
         }
@@ -95,13 +115,24 @@ public class Controller {
         this.setVis(activesAva,jailsAva,passivesAva);
     }
 
-    public void setVis(List<Integer> actives,List<Integer> jails, List<Integer> passives ){
+    /**
+     * updates the linechart with integers
+     * @param actives
+     * @param jails
+     * @param passives
+     */
+    public void setVis(List<Integer> actives,
+                       List<Integer> jails,
+                       List<Integer> passives ){
 
 
         for (int i = 0; i< actives.size();i++){
-            passiveAgent.getData().add(new XYChart.Data(Integer.toString(i),passives.get(i)));
-            jailAgent.getData().add(new XYChart.Data(Integer.toString(i),jails.get(i)));
-            rebelAgent.getData().add(new XYChart.Data(Integer.toString(i),actives.get(i)));
+            passiveAgent.getData().add(
+                    new XYChart.Data(Integer.toString(i),passives.get(i)));
+            jailAgent.getData().add(
+                    new XYChart.Data(Integer.toString(i),jails.get(i)));
+            rebelAgent.getData().add(
+                    new XYChart.Data(Integer.toString(i),actives.get(i)));
         }
 
         lineChart.getData().add(rebelAgent);
@@ -110,6 +141,9 @@ public class Controller {
 
     }
 
+    /**
+     * initialises linechart
+     */
     private void initVis(){
         passiveAgent = new XYChart.Series();
         jailAgent= new XYChart.Series();
@@ -122,7 +156,10 @@ public class Controller {
     }
 
 
-
+    /**
+     * runs the model within the visualisation
+     * @return
+     */
     private Visualization simulate(){
 
         // initialize the model
@@ -138,8 +175,4 @@ public class Controller {
 
         return vis;
     }
-
-
-
-
 }

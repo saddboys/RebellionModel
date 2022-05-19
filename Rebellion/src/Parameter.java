@@ -1,3 +1,6 @@
+/**
+ * initialises the parameters of the visualisation
+ */
 public class Parameter {
 
     private static double initialDensityAgent = 0.70;
