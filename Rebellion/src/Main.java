@@ -1,13 +1,17 @@
+/**
+ * Runes the model itself
+ */
+
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Main {
 
     public static Model model;
 
+    /**
+     * Runs the model itself for 500 turns
+     * @throws IOException
+     */
     public static void runWithoutVisualisation() throws IOException {
         File csvOutputFile = new File("output.csv");
         FileWriter myWriter = new FileWriter(csvOutputFile);
@@ -52,6 +56,11 @@ public class Main {
         }
     }
 
+    /**
+     * Reads and sorts through the arguments to apply to
+     * set parameters
+     * @param args
+     */
     private static void readArgs(String[] args){
         for (int i = 0; i < args.length - 1; i = i + 2){
             String[] param = new String[]{args[i], args[i+1]};
@@ -59,6 +68,10 @@ public class Main {
         }
     }
 
+    /**
+     * extracts parameters out of a single argument
+     * @param param
+     */
     private static void readParam(String[] param){
 
         switch (param[0]) {
@@ -83,6 +96,9 @@ public class Main {
         }
     }
 
+    /**
+     * prints the help error message
+     */
     public static void printHelp(){
         System.out.println(
                 """
