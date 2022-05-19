@@ -15,11 +15,6 @@ public class Main {
 
 
         model = new Model(40, 40);
-        /**model.setInitialDensityCops(0.04);
-        model.setInitialDensityAgent(0.7);
-        model.setLegitimacy(0.82);
-        model.setMaxJailTerm(30);
-        model.setVision(7);**/
         model.setup();
 
         int[] turtles = model.checkSum();
@@ -47,18 +42,9 @@ public class Main {
             readArgs(args);
             runWithoutVisualisation();
         } catch (NumberFormatException e) {
-            System.out.println(
-                    """
-                            Parameters must be in the following format:\s
-                            -cops <double>
-                            -agents <double>
-                            -legit <double>
-                            -jail <int>
-                            -vision <int>
-                            Separate all inputs with a empty space
-                            """
-            );
+            printHelp();
         }
+        System.out.println("Completed! Output at output.csv");
     }
 
     private static void readArgs(String[] args){
@@ -86,7 +72,29 @@ public class Main {
             case "-vision":
                 Parameter.setVision(Integer.parseInt(param[1]));
                 break;
+            case "-h":
+                printHelp();
+                break;
         }
+    }
+
+    public static void printHelp(){
+        System.out.println(
+                """
+                    Parameters must be in the following format:\s
+                    -cops <double> : Density of Cops in map, default 0.04
+                    -agents <double> : Density of Agents in map, default 0.7
+                    -legit <double> : Government legitimacy, default 0.82
+                    -jail <int> : Max jail term for agents, default 30
+                    -vision <int> : Vision for all agents, default 7
+                    
+                    Separate all inputs with a empty space
+                    cops + agents must be <= 1.0!
+                    
+                    e.g. Java Main -cops 0.05 -legit 0.7 -jail 30  -vision 3
+                    
+                    """
+        );
     }
 }
 
