@@ -162,7 +162,8 @@ public class Model {
 
         // calculate next state revolts, and spend some time in jail
         for (Agent agent: agents){
-            if (agent.getState() == AgentState.PASSIVE) {
+            if (agent.getState() == AgentState.PASSIVE ||
+                    agent.getState() == AgentState.REBELLING) {
                 agent.revoltOrNot();
             }
         }
