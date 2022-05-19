@@ -17,4 +17,8 @@ public class Government {
     public double getLegitimacy() {
         return legitimacy;
     }
+
+    public void setLegitimacy(double legitimacy){
+        this.legitimacy = legitimacy;
+    }
 }

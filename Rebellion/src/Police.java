@@ -43,7 +43,6 @@ public class Police extends Turtle{
             // perform arrest
             agent.arrest(rand.nextInt(Main.model.getMaxJailTerm()));
             Main.model.jailCount += 1;
-            Main.model.incrementLegitimacy();
         }
     }
 }

@@ -190,7 +190,14 @@ public class Model {
             }
         }
 
+        // model extension, update legitimacy
+        updateLegitimacy();
+    }
 
+    public void updateLegitimacy() {
+        double newLegit = Parameter.getLegitimacy() +
+                (1 - Parameter.getLegitimacy()) * (jailCount * 1.0) / agents.size();
+        govt.setLegitimacy(newLegit);
     }
 
     /**
@@ -250,10 +257,8 @@ public class Model {
         return res;
     }
 
-    public void incrementLegitimacy() {
-        this.legitimacy = Parameter.getLegitimacy() + (1 - Parameter.getLegitimacy()) * (jailCount * 1.0) / agents.size();
-        System.out.println(this.legitimacy);
-    }
+
+
     public void setLegitimacy(double legitimacy) {
         this.legitimacy = legitimacy;
     }
