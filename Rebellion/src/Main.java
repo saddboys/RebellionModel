@@ -41,10 +41,15 @@ public class Main {
         try {
             readArgs(args);
             runWithoutVisualisation();
+            System.out.println("Completed! Output at output.csv");
         } catch (NumberFormatException e) {
             printHelp();
+        } catch (IllegalArgumentException e){
+            printHelp();
+            System.out.println(e.getMessage());
+        } catch (Exception e){
+            e.printStackTrace();
         }
-        System.out.println("Completed! Output at output.csv");
     }
 
     private static void readArgs(String[] args){

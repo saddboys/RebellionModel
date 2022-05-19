@@ -73,14 +73,26 @@ public class Model {
      */
     public void setup(){
         if (vision > width || vision > height){
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException(
+                    "vision cannot be more than width/height"
+            );
+        }
+        if (initialDensityAgent + initialDensityCops > 1.0) {
+            throw new IllegalArgumentException(
+                    "initial density of cops and agent must add to 1.0"
+            );
+        }
+        if (legitimacy < 0 || maxJailTerm < 0 ||
+            initialDensityAgent < 0 || initialDensityCops < 0 ||
+            vision < 0){
+            throw new IllegalArgumentException(
+                    "No argument may be negative"
+            );
         }
 
         govt = new Government(legitimacy);
 
-        if (initialDensityAgent + initialDensityCops > 1.0) {
-            throw new IllegalArgumentException();
-        }
+
 
         // Generate width height array for random selection(
         List<int[]> placements = new ArrayList<>();
