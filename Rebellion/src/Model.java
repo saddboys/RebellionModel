@@ -29,7 +29,10 @@ public class Model {
     // Initial Government legitimacy
     private double legitimacy = Parameter.getLegitimacy();
 
+    // new rebels for next state
     public List<Agent> newRebels = new ArrayList<>();
+    // new passive agents for next state
+    public List<Agent> newPassives = new ArrayList<>();
 
     // List of all turtles
     private List<Turtle> turtles;
@@ -157,7 +160,6 @@ public class Model {
         }
         this.turtleMap = nextMapState;
 
-
         // calculate next state revolts, and spend some time in jail
         for (Agent agent: agents){
             if (agent.getState() == AgentState.PASSIVE) {
@@ -165,12 +167,15 @@ public class Model {
             }
         }
 
-
-        // update to rebelling agents for next state and clear
+        // update to rebelling and passive agents for next state and clear
         for (Agent agent : newRebels){
             agent.setState(AgentState.REBELLING);
         }
         newRebels.clear();
+        for (Agent agent : newPassives){
+            agent.setState(AgentState.PASSIVE);
+        }
+        newPassives.clear();
 
         // arrest rebels in current state
         for (Police police: cops){
@@ -203,11 +208,14 @@ public class Model {
         this.newRebels.add(a);
     }
 
+    public void addNewPassives(Agent a){
+        this.newPassives.add(a);
+    }
+
     /**
      * gets the government of world
      * @return
      */
-
     public Government getGovt() {
         return govt;
     }

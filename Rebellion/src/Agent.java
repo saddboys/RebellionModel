@@ -63,6 +63,8 @@ public class Agent extends Turtle{
         // rebel if values are over threshold
         if ((grievance - netRisk) > revoltThreshold){
             Main.model.addNewRebels(this);
+        } else {
+            Main.model.addNewPassives(this);
         }
     }
 
