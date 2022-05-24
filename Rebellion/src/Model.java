@@ -245,9 +245,8 @@ public class Model {
             }else if(a.getState() == AgentState.IMPRISONED){
                 res[2] += 1;
             }
-            res[1] = currentRebel;
-
         }
+        res[1] = currentRebel;
         return res;
     }
 
