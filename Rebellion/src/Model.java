@@ -39,6 +39,8 @@ public class Model {
     private List<Agent> agents;
     private List<Police> cops;
 
+    private int currentRebel = 0;
+
     // map of the world
     private Turtle[][] turtleMap;
     // government for the world
@@ -172,6 +174,7 @@ public class Model {
         for (Agent agent : newRebels){
             agent.setState(AgentState.REBELLING);
         }
+        currentRebel = newRebels.size();
         newRebels.clear();
         for (Agent agent : newPassives){
             agent.setState(AgentState.PASSIVE);
@@ -239,13 +242,11 @@ public class Model {
         for (Agent a : this.agents){
             if(a.getState() == AgentState.PASSIVE){
                 res[0] += 1;
-            }
-            else if(a.getState() == AgentState.REBELLING){
-                res[1] += 1;
-            }
-            else if(a.getState() == AgentState.IMPRISONED){
+            }else if(a.getState() == AgentState.IMPRISONED){
                 res[2] += 1;
             }
+            res[1] = currentRebel;
+
         }
         return res;
     }
